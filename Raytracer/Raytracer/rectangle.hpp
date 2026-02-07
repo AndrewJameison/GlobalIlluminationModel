@@ -3,7 +3,7 @@
 
 class Rectangle : public Object {
     public:
-        float Intersect(Ray ray) override;
+        Point Intersect(Ray ray) override;
 
         Rectangle(float l, float w, float h) : length(l), width(w), height(h) {}
 

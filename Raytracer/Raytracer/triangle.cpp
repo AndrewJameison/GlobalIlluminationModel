@@ -1,9 +1,57 @@
 #include "triangle.hpp"
 
-float Triangle::Intersect(Ray ray)
+Point Triangle::Intersect(Ray ray)
 {
-    // TODO: Need to return point of intersection and normal of surface
-
     // See 2-2 cameraRayTracing pg 33
-    return 0;
+
+    glm::vec3 O = ray.GetPosition();
+    glm::vec3 D = ray.GetDirection();
+
+    glm::vec3 e1 = v1 - v0;
+    glm::vec3 e2 = v2 - v0;
+    glm::vec3 T = O - v0;
+    glm::vec3 P = glm::cross(D, e2);
+    glm::vec3 Q = glm::cross(T, e1);
+
+    float det = glm::dot(P, e1);
+
+    // Ray is parallel to triangle, no intersection
+    if (!det)
+    {
+        return Object::ZERO;
+    }
+
+    glm::vec3 result = glm::vec3(glm::dot(Q, e2), 
+                                 glm::dot(P, T),
+                                 glm::dot(Q, D)) / det;
+
+    float w = result.x;
+    float u = result.y;
+    float v = result.z;
+
+    // Intersection is behind ray origin
+    if (w < 0.0f)
+    {
+        return Object::ZERO;
+    }
+
+    // Intersection is outside of triangle
+    if (u < 0.0f || v < 0.0f || u + v > 1.0f)
+    {
+        return Object::ZERO;
+    }
+
+    glm::vec3 point = O + w * D;
+    glm::vec3 normal = glm::cross(e1, e2);
+
+    return Point(w, point, normal);
+
+}
+
+Triangle::Triangle(glm::vec3 i, glm::vec3 j, glm::vec3 k, sf::Color c)
+{
+    v0 = i;
+    v1 = j;
+    v2 = k;
+    color = c;
 }

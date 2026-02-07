@@ -3,8 +3,8 @@
 
 class Triangle : public Object {
   public:
-    float Intersect(Ray ray) override;
-    Triangle(glm::vec3 a, glm::vec3 b, glm::vec3 c) : v0(a), v1(b), v2(c) {}
+    Point Intersect(Ray ray) override;
+    Triangle(glm::vec3 i, glm::vec3 j, glm::vec3 k, sf::Color c);
 
   private:
     glm::vec3 v0;

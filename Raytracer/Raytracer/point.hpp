@@ -1,19 +1,17 @@
 #pragma once
 #include <glm/glm.hpp>
 
-
-// TODO: replace intersect return value with Point class
-// TODO: restructure class variables and methods to optimize mem use
-
+/// <summary>
+/// A wrapper class for the information returned from the point of intersection of a ray
+/// </summary>
 class Point{
     public:
-        Point(glm::vec3 p, glm::vec3 n, float w): position(p), normal(n), magnitude(w) {}
-        
-        float GetMagnitude() { return magnitude; }
-        glm::vec3 GetPosition() { return position; }
-        glm::vec3 GetNormal() { return normal; }
+        float GetDistance() const { return distance; }
+        glm::vec3 GetPosition() const { return position; }
+        glm::vec3 GetNormal() const { return normal; }
+        Point(float w, glm::vec3 p, glm::vec3 n): distance(w), position(p), normal(n) {}
     private:
-        float magnitude;
+        float distance;
         glm::vec3 position;
         glm::vec3 normal;
 };

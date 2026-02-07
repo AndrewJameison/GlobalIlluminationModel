@@ -31,12 +31,11 @@ sf::Color World::Spawn(Ray ray)
     // For each object in the world check for intersection with the ray
     for (Object* obj : objects)
     {
-        float dist = obj->Intersect(ray);
+        Point point = obj->Intersect(ray);
 
-        // TODO: Add a distance check to the if statment to find closest intersection
-        if (dist != INFINITY && dist < w)
+        if (point.GetDistance() < w)
         {
-            w = dist;
+            w = point.GetDistance();
             intersection = obj;
         }
     }
@@ -44,10 +43,7 @@ sf::Color World::Spawn(Ray ray)
     // Return the resulting color value of the ray's journey
     if (intersection != nullptr)
     {
-        // For now, just return a basic color for each object. In future, have proper shading
-        //if (typeid(*intersection) == typeid(Sphere))
-        //return intersection->color;
-        return sf::Color::Green;
+        return intersection->color;
     }
     
     else

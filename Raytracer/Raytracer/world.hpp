@@ -14,5 +14,4 @@ class World {
   private:
     sf::Color backgroundColor;
     std::vector<Object*> objects;
-
 };

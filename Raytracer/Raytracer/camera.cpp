@@ -13,7 +13,7 @@ Camera::Camera(float focalLen, unsigned int im_x, unsigned int im_y, float fov, 
     imageWidth = im_x;
     imageHeight = im_y;
 
-    filmPlaneHeight = 2 * glm::tan((fov * glm::pi<float>() / 180.0) / 2.0) * focalLen;
+    filmPlaneHeight = 2.0f * glm::tan((fov * glm::pi<float>() / 180.0f) / 2.0f) * focalLen;
     float ratio = (float)im_x / (float)im_y;
     filmPlaneWidth = ratio * filmPlaneHeight;
 
@@ -56,7 +56,6 @@ void Camera::Render(World world)
                                     
         // convert camera coordinates to world space
         // TODO: move transpose and inverse into lookat? if it never changes, why calc. every frame?
-        //glm::mat4 invView = glm::transpose(glm::inverse(viewMatrix)); // POSSIBLY INCORRECT
         glm::mat4 invView = glm::inverse(viewMatrix);
         glm::vec4 pxWorld = invView * pxCamera;
         glm::vec3 p1 = glm::vec3(pxWorld) / pxWorld.w;
@@ -91,30 +90,8 @@ void Camera::Render(World world)
     }
 }
 
-
 void Camera::LookAt(glm::vec3 cameraPosition, glm::vec3 targetPosition, glm::vec3 upVector)
-{
-    glm::vec3 n = glm::normalize(targetPosition - cameraPosition);
-    glm::vec3 u = glm::normalize(glm::cross(upVector, n));
-    glm::vec3 v = glm::cross(n, u); 
-//
-    float d1 = -glm::dot(cameraPosition, u);
-    float d2 = -glm::dot(cameraPosition, v);
-    float d3 = -glm::dot(cameraPosition, n);
-//
-    //viewMatrix = glm::mat4(u.x, v.x, n.x, 0,
-    //                       u.y, v.y, n.y, 0,
-    //                       u.z, v.z, n.z, 0,
-    //                       d1,  d2,  d3,  1);
-//
-    // NOTE: GLM feeds in matrices by columns, but we want row major order so it's going to look reveresed
-    //viewMatrix = glm::mat4(u.x, u.y, u.z, d1,
-    //                       v.x, v.y, v.z, d2,
-    //                       n.x, n.y, n.z, d3,
-    //                       0,   0,   0,   1);
-    position = cameraPosition;
-
+{   
     viewMatrix = glm::lookAtLH(cameraPosition, targetPosition, upVector);
-    
-    // Update camera position for later use
-}
+    position = cameraPosition;
+ }

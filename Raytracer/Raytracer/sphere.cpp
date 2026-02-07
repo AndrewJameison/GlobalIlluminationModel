@@ -1,7 +1,7 @@
 #include "sphere.hpp"
 
 // aka a WHOLE LOT OF MATH
-float Sphere::Intersect(Ray ray)
+Point Sphere::Intersect(Ray ray)
 {
     // TODO: Need to return point of intersection and normal of surface
 
@@ -12,12 +12,11 @@ float Sphere::Intersect(Ray ray)
     float w;
     
     // Step 1: Compute A, B, and C coefficients - A is 1 since D is normalized
-    float B = 2.0f * (D.x * (O.x - center.x) + 
-                    D.y * (O.y - center.y) + 
-                    D.z * (O.z - center.z));
-    float C = float(glm::pow(O.x - center.x, 2) + 
-                glm::pow(O.y - center.y, 2) + 
-                glm::pow(O.z - center.z, 2) - 
+    float B = 2.0f * glm::dot(D, (O - origin));
+
+    float C = float(glm::pow(O.x - origin.x, 2) +
+                glm::pow(O.y - origin.y, 2) +
+                glm::pow(O.z - origin.z, 2) -
                 glm::pow(radius, 2));
 
     // Step 2: Look for b^2 - 4c
@@ -27,7 +26,7 @@ float Sphere::Intersect(Ray ray)
     if (d < 0)
     {
         // No intersection
-        return INFINITY;
+        return Object::ZERO;
     }
     else if (d == 0)
     {
@@ -50,14 +49,21 @@ float Sphere::Intersect(Ray ray)
     if (w < 0)
     {
         // Intersection is behind the film plane
-        return INFINITY;
+        return Object::ZERO;
     }
 
     // Step 4: Calculate the point of intersection
     glm::vec3 P = O + w * D;
 
     // Step 5: Calculate normal at point of intersection
-    glm::vec3 N = glm::normalize(P - center);
+    glm::vec3 N = glm::normalize(P - origin);
 
-    return w;
+    return Point(w, P, N);
+}
+
+Sphere::Sphere(float r, glm::vec3 o, sf::Color c)
+{
+    radius = r;
+    origin = o;
+    color = c;
 }
