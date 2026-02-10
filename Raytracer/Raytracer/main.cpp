@@ -3,6 +3,7 @@
 #include "camera.hpp"
 #include "sphere.hpp"
 #include "triangle.hpp"
+#include "plane.hpp"
 
 // Written by Andrew Jameison for Joe Geigel's Global Illumination course CSCI 711.01
 // This program uses SFML 2.6 for displaying the image to the screen
@@ -25,6 +26,7 @@ const glm::vec3 S2_ORIGIN = glm::vec3(-3.0f, 3.0f, 2.2f);
 // Platform
 const glm::vec3 PLANE_ORIGIN = glm::vec3(0.0f);
 const glm::vec3 PLANE_SCALE = glm::vec3(20.0f, 1.0f, 100.0f);
+const glm::vec3 ZERO = glm::vec3(0.0f);
 
 const glm::vec3 v0 = glm::vec3(-10.0f, 0.0f, -50.0f);
 const glm::vec3 v1 = glm::vec3(10.0f, 0.0f, -50.0f);
@@ -55,7 +57,7 @@ int main()
 
     Triangle* t1 = new Triangle(v0, v1, v2, sf::Color::Red);
     Triangle* t2 = new Triangle(v2, v3, v0, sf::Color::Red);
-    
+
     world.Add(s1);
     world.Add(s2);
 

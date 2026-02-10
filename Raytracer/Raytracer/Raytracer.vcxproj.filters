@@ -27,7 +27,7 @@
     <ClCompile Include="ray.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="rectangle.cpp">
+    <ClCompile Include="plane.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="sphere.cpp">
@@ -50,7 +50,7 @@
     <ClInclude Include="ray.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="rectangle.hpp">
+    <ClInclude Include="plane.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="sphere.hpp">

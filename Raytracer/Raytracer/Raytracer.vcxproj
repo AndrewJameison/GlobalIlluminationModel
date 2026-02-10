@@ -22,7 +22,7 @@
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ray.cpp" />
-    <ClCompile Include="rectangle.cpp" />
+    <ClCompile Include="plane.cpp" />
     <ClCompile Include="sphere.cpp" />
     <ClCompile Include="triangle.cpp" />
     <ClCompile Include="world.cpp" />
@@ -32,7 +32,7 @@
     <ClInclude Include="object.hpp" />
     <ClInclude Include="point.hpp" />
     <ClInclude Include="ray.hpp" />
-    <ClInclude Include="rectangle.hpp" />
+    <ClInclude Include="plane.hpp" />
     <ClInclude Include="sphere.hpp" />
     <ClInclude Include="triangle.hpp" />
     <ClInclude Include="world.hpp" />
