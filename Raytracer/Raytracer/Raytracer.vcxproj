@@ -20,7 +20,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="camera.cpp" />
+    <ClCompile Include="light.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="phong.cpp" />
+    <ClCompile Include="point.cpp" />
     <ClCompile Include="ray.cpp" />
     <ClCompile Include="plane.cpp" />
     <ClCompile Include="sphere.cpp" />
@@ -29,7 +32,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera.hpp" />
+    <ClInclude Include="illumination.hpp" />
+    <ClInclude Include="light.hpp" />
     <ClInclude Include="object.hpp" />
+    <ClInclude Include="phong.hpp" />
     <ClInclude Include="point.hpp" />
     <ClInclude Include="ray.hpp" />
     <ClInclude Include="plane.hpp" />

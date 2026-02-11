@@ -1,24 +1,28 @@
 #pragma once
 #include "world.hpp"
 
+#define uint unsigned int
+const uint imageWidth = 800;
+const uint imageHeight = 600;
+const float maxIValue = 1.0f;
+
 class Camera {
-  public:
-    void LookAt(glm::vec3 cameraPosition, glm::vec3 targetPosition, glm::vec3 upVector);
-    void Render(World world);
-    Camera(float focalLen, unsigned int im_x, unsigned int im_y, float fov, glm::vec3 pos);
+    public:
+        void LookAt(glm::vec3 cameraPosition, glm::vec3 targetPosition, glm::vec3 upVector);
+        void Render(World world);
+        Camera(float focalLen, float fov, glm::vec3 pos);
+        ~Camera();
 
-  private:
-    float focalLength; // Length between camera and the film plane
+    private:
+        float focalLength; // Length between camera and the film plane
+    
+        // Camera Coordinates
+        float filmPlaneWidth;
+        float filmPlaneHeight;
 
-    // Discrete pixel coordinates
-    unsigned int imageWidth;
-    unsigned int imageHeight;
+        glm::vec3* filmPlaneBuffer;
     
-    // Camera Coordinates
-    float filmPlaneWidth;
-    float filmPlaneHeight;
-    
-    glm::vec3 position;
-    glm::mat4 viewMatrix; // moves coords from world space to camera space
+        glm::vec3 position;
+        glm::mat4 viewMatrix; // moves coords from world space to camera space
 
 };
