@@ -9,13 +9,13 @@
 class World {
 public:
 	void Add(Object* obj);
-	void Add(Light* light);
+	void Add(Light light);
 	glm::vec3 Spawn(Ray ray);
 	World(Illumination* lightModel);
 	~World();
 
 private:
 	Illumination* model;
-	std::vector<Light*> lights;
+	std::vector<Light> lights;
 	std::vector<Object*> objects;
 };

@@ -1,6 +1,6 @@
 #pragma once
-#include <glm/glm.hpp>
-#include "Point.hpp"
+#include "point.hpp"
+#include "object.hpp"
 
 // TODO: create a phong Blinn child class of the model (1pt)
 
@@ -13,8 +13,8 @@ public:
 	/// Calculates the irradiance value of a single point
 	/// </summary>
 	/// <returns>A vec3 irradiance value from this particular model</returns>
-	glm::vec3 virtual Illuminate(Point point) = 0;
+	glm::vec3 virtual Illuminate(Point point, Object* obj) = 0;
 
 protected:
-	glm::vec3 ambient;
+	glm::vec3 ambient = glm::vec3(0.0f);
 };

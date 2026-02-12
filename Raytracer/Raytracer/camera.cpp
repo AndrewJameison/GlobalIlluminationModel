@@ -15,7 +15,7 @@ Camera::Camera(float focalLen, float fov, glm::vec3 pos)
     float ratio = (float)imageWidth / (float)imageHeight;
     filmPlaneWidth = ratio * filmPlaneHeight;
 
-    buffer = new filmPlaneBuffer[imageHeight];
+    buffer = new filmPlaneBuffer[imageWidth];
 }
 
 Camera::~Camera()
@@ -37,7 +37,70 @@ void Camera::Render(World world)
     sf::Sprite sprite(texture);
 
     float toneMax = 0.0f;
-    
+
+    // Size of each pixel in camera coordinates
+    float pxWidth = filmPlaneWidth / float(imageWidth);
+    float pxHeight = filmPlaneHeight / float(imageHeight);
+
+    // Define dimensions in camera space
+    glm::vec4 pxCamera = glm::vec4(-filmPlaneWidth / 2.0f + pxWidth / 2.0f,
+        filmPlaneHeight / 2.0f - pxHeight / 2.0f,
+        focalLength, 1.0f);
+
+    // convert camera coordinates to world space
+    glm::vec4 pxWorld = viewMatrix * pxCamera;
+    glm::vec3 p1 = glm::vec3(pxWorld) / pxWorld.w;
+
+    // convert increment values to world space
+    glm::vec4 xWorld = viewMatrix * (pxCamera + glm::vec4(pxWidth, 0.0f, 0.0f, 0.0f));
+    glm::vec4 yWorld = viewMatrix * (pxCamera + glm::vec4(0.0f, -pxHeight, 0.0f, 0.0f));
+
+    // NOTE: we add the pixel dimensions of the camera space...
+    // ...and then subtract the pixel dimensions of the world space to center the increment values at the world origin
+    glm::vec3 dx = (glm::vec3(xWorld) / xWorld.w) - p1;
+    glm::vec3 dy = (glm::vec3(yWorld) / yWorld.w) - p1;
+
+
+    // TODO: Add a supersampling option (toggle) and number of samples (rays) to apply for each pixel, then average them
+        // TODO: Use the rotated grid pattern https://en.wikipedia.org/wiki/Supersampling
+        // NOTE: This is a really good place for a further project. Wait until I have more time to work on this
+        // NOTE: To improve performance with anti-aliasing, we can look at propable locations to spend our time like edges
+        // ...one way to implment is by taking a few "test" samples to gauge similarity, then proceed with the rest if sufficently different
+
+    // For each pixel on the film plane, spawn a ray in with world coordinates
+    for (uint v = 0; v < imageHeight; v++)
+    {
+        for (uint u = 0; u < imageWidth; u++)
+        {
+            glm::vec3 target_pixel = p1 + float(u) * dx + float(v) * dy;
+
+            Ray ray(position, target_pixel);
+            buffer[u][v] = world.Spawn(ray);
+        }
+    }
+
+    // TODO: Loop through the film plane buffer and apply a tone reproduction operator.
+        // define a max irradiance value [0, max]
+        // vec3 values, need to apply to xyz
+        // scale down to [0, 1]
+        // Then, scale to [0, 255] for RGB
+
+    for (uint v = 0; v < imageHeight; v++)
+    {
+        for (uint u = 0; u < imageWidth; u++)
+        {
+            glm::vec3 irradiance = buffer[u][v];
+
+            uint r = (uint)glm::clamp(irradiance.x * 255.0f, 0.0f, 255.0f);
+            uint g = (uint)glm::clamp(irradiance.y * 255.0f, 0.0f, 255.0f);
+            uint b = (uint)glm::clamp(irradiance.z * 255.0f, 0.0f, 255.0f);
+
+            // TODO: properly introduce tone reproduction
+
+            image.setPixel(sf::Vector2u(u, v), sf::Color(r, g, b));
+        }
+    }
+
     // Keeping the window open
     while (window.isOpen())
     {
@@ -50,86 +113,19 @@ void Camera::Render(World world)
             if (event->is<sf::Event::Closed>())
                 window.close();
         }
-        
+
         window.clear();
 
-        // Size of each pixel in camera coordinates
-        float pxWidth  = filmPlaneWidth  / float(imageWidth);
-        float pxHeight = filmPlaneHeight / float(imageHeight);
-
-        // Define dimensions in camera space
-        glm::vec4 pxCamera= glm::vec4(-filmPlaneWidth/2.0f + pxWidth/2.0f,
-                                    filmPlaneHeight/2.0f - pxHeight/2.0f,
-                                    focalLength, 1.0f);
-                                    
-        // convert camera coordinates to world space
-        // TODO: move transpose and inverse into lookat? if it never changes, why calc. every frame?
-        glm::mat4 invView = glm::inverse(viewMatrix);
-        glm::vec4 pxWorld = invView * pxCamera;
-        glm::vec3 p1 = glm::vec3(pxWorld) / pxWorld.w;
-
-        // convert increment values to world space
-        glm::vec4 xWorld = invView * (pxCamera + glm::vec4(pxWidth, 0.0f, 0.0f, 0.0f));
-        glm::vec4 yWorld = invView * (pxCamera + glm::vec4(0.0f, -pxHeight, 0.0f, 0.0f));
-
-        // NOTE: we add the pixel dimensions of the camera space...
-        // ...and then subtract the pixel dimensions of the world space to center the increment values at the world origin
-        glm::vec3 dx = (glm::vec3(xWorld) / xWorld.w) - p1;
-        glm::vec3 dy = (glm::vec3(yWorld) / yWorld.w) - p1;
-        
-        // For each pixel on the film plane, spawn a ray in with world coordinates
-
-        // TODO: Add a supersampling option (toggle) and number of samples (rays) to apply for each pixel, then average them
-            // TODO: Use the rotated grid pattern https://en.wikipedia.org/wiki/Supersampling
-            // NOTE: This is a really good place for a further project. Wait until I have more time to work on this
-            // NOTE: To improve performance with anti-aliasing, we can look at propable locations to spend our time like edges
-            // ...one way to implment is by taking a few "test" samples to gauge similarity, then proceed with the rest if sufficently different
-
-        // TODO: Store the irradiance values of each point into a "film plane buffer," should be a vec3 for each "wavelength"
-
-        for (uint v = 0; v < imageHeight; v++)
-        {
-            for (uint u = 0; u < imageWidth; u++)
-            {
-                glm::vec3 target_pixel = p1 + float(u) * dx + float(v) * dy;
-
-                Ray ray(position, target_pixel);
-                buffer[u][v] = world.Spawn(ray);
-            }
-        }
-
-        // TODO: Loop through the film plane buffer and apply a tone reproduction operator.
-            // define a max irradiance value [0, max]
-            // vec3 values, need to apply to xyz
-            // scale down to [0, 1]
-            // Then, scale to [0, 255] for RGB
-
-        for (uint v = 0; v < imageHeight; v++)
-        {
-            for (uint u = 0; u < imageWidth; u++)
-            {
-                glm::vec3 irradiance = buffer[u][v];
-
-                float r = glm::clamp(irradiance.x * 255.0f, 0.0f, 255.0f);
-                float g = glm::clamp(irradiance.y * 255.0f, 0.0f, 255.0f);
-                float b = glm::clamp(irradiance.z * 255.0f, 0.0f, 255.0f);
-
-                // TODO: properly introduce tone reproduction
-
-                image.setPixel(sf::Vector2u(u, v), sf::Color(255u, 255u, 255u));
-            }
-        }
-        
         // NOTE: We are assuming that the image is referencing the texture directly, not by copy
         texture.update(image);
         window.draw(sprite);
-                
         window.display();
     }
 }
 
 void Camera::LookAt(glm::vec3 cameraPosition, glm::vec3 targetPosition, glm::vec3 upVector)
 {   
-    viewMatrix = glm::lookAtLH(cameraPosition, targetPosition, upVector);
+    // We move from camera space to world space, so our viewMatrix goes in reverse
+    viewMatrix = glm::inverse(glm::lookAtLH(cameraPosition, targetPosition, upVector));
     position = cameraPosition;
  }

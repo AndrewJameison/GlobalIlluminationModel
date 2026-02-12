@@ -9,5 +9,5 @@ public:
 	Light(glm::vec3 pos, glm::vec3 irr);
 private:
 	glm::vec3 position;
-	glm::vec3 irradiance; // [0,1] radiance values for each wavelength
+	glm::vec3 irradiance;
 };

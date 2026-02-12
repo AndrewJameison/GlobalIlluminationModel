@@ -1,7 +1,7 @@
 #include "point.hpp"
 #include "object.hpp"
 
-void Point::AddLight(Light* light, glm::vec3 shadow)
+void Point::AddLight(Light light, glm::vec3 shadow)
 {
 	lights.push_back(light);
 	shadows.push_back(shadow);
@@ -10,7 +10,7 @@ void Point::AddLight(Light* light, glm::vec3 shadow)
 Point::Point()
 {
 	distance = INFINITY;
-	position, normal, incoming = glm::vec3(0.0f);
+	position = glm::vec3(0.0f), normal = glm::vec3(0.0f), incoming = glm::vec3(0.0f);
 }
 
 /// <summary>
@@ -20,11 +20,10 @@ Point::Point()
 /// <param name="p">The position of the intersection</param>
 /// <param name="n">The normal of the object at the point of intersection</param>
 /// <param name="obj">The object that has been intersected by the light ray</param>
-Point::Point(float w, glm::vec3 p, glm::vec3 n, glm::vec3 i)//, Object* obj)
+Point::Point(float w, glm::vec3 p, glm::vec3 n, glm::vec3 i)
 {
 	distance = w;
 	position = p;
 	normal = n;
 	incoming = i;
-	//object = obj;
 }

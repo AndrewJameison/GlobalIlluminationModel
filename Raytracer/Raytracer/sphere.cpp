@@ -3,8 +3,6 @@
 // aka a WHOLE LOT OF MATH
 Point Sphere::Intersect(Ray ray)
 {
-    // TODO: Need to return point of intersection and normal of surface
-
     // See 2-2 cameraRayTracing pg 21
 
     glm::vec3 O = ray.GetPosition();
@@ -61,7 +59,7 @@ Point Sphere::Intersect(Ray ray)
     // Make sure to pass the incoming ray back to the point for the illumination model
     glm::vec3 I = glm::normalize(O - P);
 
-    return Point(w, P, N, I);// , this);
+    return Point(w, P, N, I);
 }
 
 Sphere::Sphere(float r, glm::vec3 o, glm::vec3 d, glm::vec3 s)

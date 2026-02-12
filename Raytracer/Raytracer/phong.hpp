@@ -4,7 +4,7 @@
 class Phong : public Illumination {
 // kd +ks < 1 see assn-3 pg11
 public:
-	glm::vec3 Illuminate(Point point) override;
+	glm::vec3 Illuminate(Point point, Object* obj) override;
 	Phong(float a = 0.6f, float d = 0.6f, float s = 0.6f, float e = 5.0f) : ka(a), kd(d), ks(s), ke(e) {}
 
 private:

@@ -8,7 +8,7 @@ const uint imageWidth = 800;
 const uint imageHeight = 600;
 const float maxIValue = 1.0f;
 
-typedef glm::vec3 filmPlaneBuffer[imageWidth];
+typedef glm::vec3 filmPlaneBuffer[imageHeight];
 
 class Camera {
     public:
@@ -24,7 +24,6 @@ class Camera {
         float filmPlaneWidth;
         float filmPlaneHeight;
 
-        //glm::vec3* filmPlaneBuffer;
         filmPlaneBuffer* buffer;
     
         glm::vec3 position;

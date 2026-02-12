@@ -6,7 +6,7 @@ World::World(Illumination* lightModel)
 {
     model = lightModel;
     objects = std::vector<Object*>();
-    lights = std::vector<Light*>();
+    lights = std::vector<Light>();
 }
 
 World::~World()
@@ -17,13 +17,13 @@ World::~World()
     {
         delete obj;
     }
-    for (Light* light : lights)
-    {
-        delete light;
-    }
+// for (Light* light : lights)
+// {
+//     delete light;
+// }
 
     objects.clear();
-    lights.clear();
+    //lights.clear();
 }
 
 void World::Add(Object* obj)
@@ -31,38 +31,36 @@ void World::Add(Object* obj)
     objects.push_back(obj);
 }
 
-void World::Add(Light* light)
+void World::Add(Light light)
 {
     lights.push_back(light);
 }
 
 glm::vec3 World::Spawn(Ray ray)
 {
-    // TODO: get rid of w, the intersection
-    float w = INFINITY;
-    Point intersection = Point(INFINITY, glm::vec3(), glm::vec3(), glm::vec3());// , nullptr);
+    Point intersection = Point();
+    Object* object = nullptr;
     
     // For each object in the world check for intersection with the ray
     for (Object* obj : objects)
     {
         Point point = obj->Intersect(ray);
 
-        if (point.GetDistance() < w)
+        if (point.GetDistance() < intersection.GetDistance())
         {
-            w = point.GetDistance();
             intersection = point;
+            object = obj;
         }
     }
     
     // Return the resulting color value of the ray's journey
-    if (w != INFINITY)
+    if (object != nullptr)
     {
-        // TODO: pass the point into an illuminance model, return an irradiance value
-        for (Light* light : lights)
+        for (Light light : lights)
         {
             // Cast a shadow ray to the light source
             bool isClear = true;
-            Ray shadowRay(intersection.GetPosition(), light->GetPosition());
+            Ray shadowRay(intersection.GetPosition(), light.GetPosition());
 
             for (Object* obj : objects)
             {
@@ -84,6 +82,6 @@ glm::vec3 World::Spawn(Ray ray)
         }
     }
 
-    return model->Illuminate(intersection);
+    return model->Illuminate(intersection, object);
 }
 

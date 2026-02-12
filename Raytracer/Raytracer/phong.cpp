@@ -1,10 +1,13 @@
 #include "phong.hpp"
 #include "object.hpp"
 
-glm::vec3 Phong::Illuminate(Point point)
+glm::vec3 Phong::Illuminate(Point point, Object* obj)
 {
-    // TODO: have a condition to return an ambient value early if distance == INFINITY
-    Object* obj = nullptr; // point.object;
+    // No intersection, return a background ambient light
+    if (obj == nullptr)
+    {
+        return ka * ambient;
+    }
 
     // The normal of the intersection
     glm::vec3 N = point.GetNormal();
@@ -18,14 +21,14 @@ glm::vec3 Phong::Illuminate(Point point)
 
     glm::vec3 Specular = glm::vec3(0.0f);
 
-    std::vector<Light*> lights = point.GetLights();
+    std::vector<Light> lights = point.GetLights();
     std::vector<glm::vec3> shadows = point.GetShadows();
 
     // The sum diffuse and specular values caused by all light sources not blocked by objects
     // If we cannot see the light from the pointof the intersection, only the ambient light is applied
     for (unsigned int i = 0; i < point.GetLights().size(); i++)
     {
-        glm::vec3 L = lights[i]->GetIrradiance();
+        glm::vec3 L = lights[i].GetIrradiance();
 
         // Direction of the incoming light
         glm::vec3 S = shadows[i];
@@ -36,5 +39,5 @@ glm::vec3 Phong::Illuminate(Point point)
         Specular += L * obj->GetSpecular() * glm::pow(glm::dot(R, V), ke);
     }
 
-    glm::vec3 I = ka * Ambient + kd * Diffuse + ks * Specular;
+    return ka * Ambient + kd * Diffuse + ks * Specular;
 }
