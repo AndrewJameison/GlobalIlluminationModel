@@ -1,18 +1,11 @@
 #pragma once
 #include "illumination.hpp"
 
-class Phong : Illumination {
-	// TODO: add Phong parameters
-	// ka ambient scale
-	// kd diffuse scale
-	// ks specular scale
-	// kd +ks < 1 see assn-3 pg11
-	// exponent ke (size of the specular highlight)
-	// L(V) = 
-
+class Phong : public Illumination {
+// kd +ks < 1 see assn-3 pg11
 public:
-	glm::vec3 Illuminate() override;
-	Phong phong(float a, float d, float s, float e);
+	glm::vec3 Illuminate(Point point) override;
+	Phong(float a = 0.6f, float d = 0.6f, float s = 0.6f, float e = 5.0f) : ka(a), kd(d), ks(s), ke(e) {}
 
 private:
 	/// <summary>

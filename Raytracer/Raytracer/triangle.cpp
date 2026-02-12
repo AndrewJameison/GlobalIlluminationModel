@@ -18,7 +18,7 @@ Point Triangle::Intersect(Ray ray)
     // Ray is parallel to triangle, no intersection
     if (!det)
     {
-        return Object::ZERO;
+        return Point();
     }
 
     glm::vec3 result = glm::vec3(glm::dot(Q, e2), 
@@ -32,26 +32,30 @@ Point Triangle::Intersect(Ray ray)
     // Intersection is behind ray origin
     if (w < 0.0f)
     {
-        return Object::ZERO;
+        return Point();
     }
 
     // Intersection is outside of triangle
     if (u < 0.0f || v < 0.0f || u + v > 1.0f)
     {
-        return Object::ZERO;
+        return Point();
     }
 
     glm::vec3 point = O + w * D;
     glm::vec3 normal = glm::cross(e1, e2);
 
-    return Point(w, point, normal);
+    glm::vec3 I = glm::normalize(O - P);
+
+
+    return Point(w, point, normal, I);// , this);
 
 }
 
-Triangle::Triangle(glm::vec3 i, glm::vec3 j, glm::vec3 k, sf::Color c)
+Triangle::Triangle(glm::vec3 i, glm::vec3 j, glm::vec3 k, glm::vec3 d, glm::vec3 s)
 {
     v0 = i;
     v1 = j;
     v2 = k;
-    color = c;
+    diffuse = d;
+    specular = s;
 }

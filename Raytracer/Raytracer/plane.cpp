@@ -9,7 +9,7 @@ Point Plane::Intersect(Ray ray)
     // ...we should only use negative denominator values
     if (den == 0.0f)
     {
-        return Object::ZERO;
+        return Point();
     }
 
     float num = (glm::dot(origin - ray.GetPosition(), normal));
@@ -19,18 +19,23 @@ Point Plane::Intersect(Ray ray)
     // Intersection behind the ray
     if (w <= 0)
     {
-        return Object::ZERO;
+        return Point();
     }
 
-    glm::vec3 P = ray.GetPosition() + w * ray.GetDirection();
+    glm::vec3 O = ray.GetPosition();
 
-    return Point(w, P, normal);
+    glm::vec3 P = O + w * ray.GetDirection();
+
+    glm::vec3 I = glm::normalize(O - P);
+
+    return Point(w, P, normal, I);//, this);
 }
 
-Plane::Plane(glm::vec3 o, glm::vec3 n, sf::Color c)
+Plane::Plane(glm::vec3 o, glm::vec3 n, glm::vec3 d, glm::vec3 s)
 {
     origin = o;
     normal = n;
-    color = c;
+    diffuse = d;
+    specular = s;
 }
 

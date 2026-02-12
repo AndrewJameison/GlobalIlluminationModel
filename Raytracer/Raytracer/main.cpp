@@ -4,6 +4,7 @@
 #include "sphere.hpp"
 #include "triangle.hpp"
 #include "plane.hpp"
+#include "phong.hpp"
 
 // Written by Andrew Jameison for Joe Geigel's Global Illumination course CSCI 711.01
 // This program uses SFML 2.6 for displaying the image to the screen
@@ -11,8 +12,6 @@
     // pos. rotation is clockwise, and pos-z goes into the screen
     // Row major order for matrices pre multiply matrices M = OLD * NEW 
 
-// Object Values
-const glm::vec3 ZERO = glm::vec3(0.0f);
 
 // Sphere 1
 const float S1_RADIUS = 3.0f;
@@ -37,7 +36,8 @@ const glm::vec3 WORLD_UP = glm::vec3(0.0f, 1.0f, 0.0f);
 
 int main()
 {
-    World world = World();
+    Phong* lightModel = new Phong();
+    World world = World(lightModel);
     
     // TODO: make the extra credit LAST, have pictures of each stage of the project
         // TODO: Multiple lighting (1pt)
@@ -45,11 +45,11 @@ int main()
         // TODO: Super sampling (1pt)
 
     // Create and add objects to the world
-    Sphere* s1 = new Sphere(S1_RADIUS, S1_ORIGIN, sf::Color::Blue);
-    Sphere* s2 = new Sphere(S2_RADIUS, S2_ORIGIN, sf::Color::Cyan);
+    Sphere* s1 = new Sphere(S1_RADIUS, S1_ORIGIN);
+    Sphere* s2 = new Sphere(S2_RADIUS, S2_ORIGIN);
 
-    Triangle* t1 = new Triangle(v0, v1, v2, sf::Color::Red);
-    Triangle* t2 = new Triangle(v2, v3, v0, sf::Color::Red);
+    Triangle* t1 = new Triangle(v0, v1, v2);
+    Triangle* t2 = new Triangle(v2, v3, v0);
 
     world.Add(s1);
     world.Add(s2);

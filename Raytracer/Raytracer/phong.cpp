@@ -1,16 +1,40 @@
 #include "phong.hpp"
+#include "object.hpp"
 
-glm::vec3 Phong::Illuminate()
+glm::vec3 Phong::Illuminate(Point point)
 {
-    return glm::vec3();
-}
+    // TODO: have a condition to return an ambient value early if distance == INFINITY
+    Object* obj = nullptr; // point.object;
 
-Phong Phong::phong(float a, float d, float s, float e)
-{
-    ka = a;
-    kd = d;
-    ks = s;
-    ke = e;
+    // The normal of the intersection
+    glm::vec3 N = point.GetNormal();
 
-    return Phong();
+    // Incoming ray direction (initially the camera)
+    glm::vec3 V = point.GetIncoming();
+
+    glm::vec3 Ambient = obj->GetDiffuse() * ambient;
+        
+    glm::vec3 Diffuse = glm::vec3(0.0f);
+
+    glm::vec3 Specular = glm::vec3(0.0f);
+
+    std::vector<Light*> lights = point.GetLights();
+    std::vector<glm::vec3> shadows = point.GetShadows();
+
+    // The sum diffuse and specular values caused by all light sources not blocked by objects
+    // If we cannot see the light from the pointof the intersection, only the ambient light is applied
+    for (unsigned int i = 0; i < point.GetLights().size(); i++)
+    {
+        glm::vec3 L = lights[i]->GetIrradiance();
+
+        // Direction of the incoming light
+        glm::vec3 S = shadows[i];
+        Diffuse += L * obj->GetDiffuse() * glm::dot(S, N);
+
+        // The perfect mirror reflection of the incoming light
+        glm::vec3 R = glm::normalize(glm::reflect(S, N));
+        Specular += L * obj->GetSpecular() * glm::pow(glm::dot(R, V), ke);
+    }
+
+    glm::vec3 I = ka * Ambient + kd * Diffuse + ks * Specular;
 }

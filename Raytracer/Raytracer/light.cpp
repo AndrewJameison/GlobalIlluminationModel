@@ -1,7 +1,7 @@
 #include "light.hpp"
 
-Light::Light(glm::vec3 o, glm::vec3 irr)
+Light::Light(glm::vec3 pos, glm::vec3 irr)
 {
-	origin = o;
+	position = pos;
 	irradiance = irr;
 }

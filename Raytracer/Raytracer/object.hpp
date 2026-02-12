@@ -7,20 +7,20 @@
 /// <summary>
 /// A parent class for all objects in the world
 /// </summary>
-class Object {
-  public:
-      // TODO: ambient / diffuse color of the object vec3[0,1] each
-      glm::vec3 diffuse;
+class Object abstract {
+public:
+	/// <summary>
+	/// A NULL equivalent return value for Objects to indicate no intersection 
+	/// </summary>
 
-      // TODO: speculuar color of the object vec3[0, 1] each, by default white
-      glm::vec3 specular;
+	glm::vec3 GetDiffuse() const { return diffuse; }
+	glm::vec3 GetSpecular() const { return specular; }
 
-      // NOTE: For whatever reason, the intersect function can only be overriden if you assign it to a point. Trying to instantiate on the stack throws C2259
+	//const Point ZERO = Point(INFINITY, glm::vec3(), glm::vec3(), glm::vec3());//, nullptr);
 
-      Point virtual Intersect(Ray ray) = 0;
-  protected:
-      /// <summary>
-      /// A NULL equivalent return value for Objects to indicate no intersection 
-      /// </summary>
-      const Point ZERO = Point(INFINITY, glm::vec3(0.0f), glm::vec3(0.0f));
+	// NOTE: For whatever reason, the intersect function can only be overriden if you assign it to a pointer. Trying to instantiate on the stack throws C2259
+	virtual Point Intersect(Ray ray);
+protected:
+	glm::vec3 diffuse;
+	glm::vec3 specular;
 };

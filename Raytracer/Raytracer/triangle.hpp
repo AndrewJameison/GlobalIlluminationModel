@@ -2,9 +2,9 @@
 #include "object.hpp"
 
 class Triangle : public Object {
-  public:
+public:
     Point Intersect(Ray ray) override;
-    Triangle(glm::vec3 i, glm::vec3 j, glm::vec3 k, sf::Color c);
+    Triangle(glm::vec3 i, glm::vec3 j, glm::vec3 k, glm::vec3 d = glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3 s = glm::vec3(1.0f));
 
   private:
     glm::vec3 v0;

@@ -15,12 +15,12 @@ Camera::Camera(float focalLen, float fov, glm::vec3 pos)
     float ratio = (float)imageWidth / (float)imageHeight;
     filmPlaneWidth = ratio * filmPlaneHeight;
 
-    filmPlaneBuffer = new glm::vec3[imageWidth * imageHeight];
+    buffer = new filmPlaneBuffer[imageHeight];
 }
 
 Camera::~Camera()
 {
-    delete[] filmPlaneBuffer;
+    delete[] buffer;
 }
 
 void Camera::Render(World world)
@@ -35,6 +35,8 @@ void Camera::Render(World world)
         printf("ERROR: unable to load texture from image\n");
 
     sf::Sprite sprite(texture);
+
+    float toneMax = 0.0f;
     
     // Keeping the window open
     while (window.isOpen())
@@ -92,7 +94,7 @@ void Camera::Render(World world)
                 glm::vec3 target_pixel = p1 + float(u) * dx + float(v) * dy;
 
                 Ray ray(position, target_pixel);
-                filmPlaneBuffer[u][v] = world.Spawn(ray);
+                buffer[u][v] = world.Spawn(ray);
             }
         }
 
@@ -106,8 +108,15 @@ void Camera::Render(World world)
         {
             for (uint u = 0; u < imageWidth; u++)
             {
-                sf::Color color = filmPlaneBuffer[u][v];
-                image.setPixel(sf::Vector2u(u, v), color);
+                glm::vec3 irradiance = buffer[u][v];
+
+                float r = glm::clamp(irradiance.x * 255.0f, 0.0f, 255.0f);
+                float g = glm::clamp(irradiance.y * 255.0f, 0.0f, 255.0f);
+                float b = glm::clamp(irradiance.z * 255.0f, 0.0f, 255.0f);
+
+                // TODO: properly introduce tone reproduction
+
+                image.setPixel(sf::Vector2u(u, v), sf::Color(255u, 255u, 255u));
             }
         }
         

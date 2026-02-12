@@ -26,7 +26,7 @@ Point Sphere::Intersect(Ray ray)
     if (d < 0)
     {
         // No intersection
-        return Object::ZERO;
+        return Point();
     }
     else if (d == 0)
     {
@@ -49,7 +49,7 @@ Point Sphere::Intersect(Ray ray)
     if (w < 0)
     {
         // Intersection is behind the film plane
-        return Object::ZERO;
+        return Point();
     }
 
     // Step 4: Calculate the point of intersection
@@ -58,12 +58,16 @@ Point Sphere::Intersect(Ray ray)
     // Step 5: Calculate normal at point of intersection
     glm::vec3 N = glm::normalize(P - origin);
 
-    return Point(w, P, N);
+    // Make sure to pass the incoming ray back to the point for the illumination model
+    glm::vec3 I = glm::normalize(O - P);
+
+    return Point(w, P, N, I);// , this);
 }
 
-Sphere::Sphere(float r, glm::vec3 o, sf::Color c)
+Sphere::Sphere(float r, glm::vec3 o, glm::vec3 d, glm::vec3 s)
 {
     radius = r;
     origin = o;
-    color = c;
+    diffuse = d;
+    specular = s;
 }

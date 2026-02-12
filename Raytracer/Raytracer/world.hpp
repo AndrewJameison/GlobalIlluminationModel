@@ -4,16 +4,18 @@
 #include "ray.hpp"
 #include "object.hpp"
 #include "light.hpp"
+#include "illumination.hpp"
 
 class World {
 public:
 	void Add(Object* obj);
+	void Add(Light* light);
 	glm::vec3 Spawn(Ray ray);
-	World(sf::Color bgColor = sf::Color::Blue);
+	World(Illumination* lightModel);
 	~World();
 
 private:
-	sf::Color ambientColor;
+	Illumination* model;
 	std::vector<Light*> lights;
 	std::vector<Object*> objects;
 };

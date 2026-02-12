@@ -2,15 +2,17 @@
 #include "sphere.hpp"
 #include "triangle.hpp"
 
-World::World(sf::Color amb)
+World::World(Illumination* lightModel)
 {
-    ambientColor = amb;
+    model = lightModel;
     objects = std::vector<Object*>();
     lights = std::vector<Light*>();
 }
 
 World::~World()
 {
+    delete model;
+
     for (Object* obj : objects)
     {
         delete obj;
@@ -19,6 +21,7 @@ World::~World()
     {
         delete light;
     }
+
     objects.clear();
     lights.clear();
 }
@@ -28,10 +31,16 @@ void World::Add(Object* obj)
     objects.push_back(obj);
 }
 
+void World::Add(Light* light)
+{
+    lights.push_back(light);
+}
+
 glm::vec3 World::Spawn(Ray ray)
 {
+    // TODO: get rid of w, the intersection
     float w = INFINITY;
-    Point intersection;
+    Point intersection = Point(INFINITY, glm::vec3(), glm::vec3(), glm::vec3());// , nullptr);
     
     // For each object in the world check for intersection with the ray
     for (Object* obj : objects)
@@ -48,15 +57,7 @@ glm::vec3 World::Spawn(Ray ray)
     // Return the resulting color value of the ray's journey
     if (w != INFINITY)
     {
-        // TODO: Create a basic illumination model class
-        // TODO: Calculate the shadow vector to every light in the scene here?
-        // TODO: create a Phong child class of the model
-        // TODO: create a phong Blinn child class of the model (1pt)
-
         // TODO: pass the point into an illuminance model, return an irradiance value
-            // pass along the lights vector
-            // pass along incoming and reflective???
-
         for (Light* light : lights)
         {
             // Cast a shadow ray to the light source
@@ -81,16 +82,8 @@ glm::vec3 World::Spawn(Ray ray)
                 intersection.AddLight(light, shadowRay.GetDirection());
             }
         }
+    }
 
-        //return intersection->color;
-    }
-    
-    // TOOD: move nullptr check to illumination model, instead just pass along the intersection ptr and return the irradiance value
-    else
-    {
-        // Background Ambient irradiance value, will be replaced in week 13
-        // TODO: rename variable to ambient value
-        return ambientColor;
-    }
+    return model->Illuminate(intersection);
 }
 
