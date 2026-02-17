@@ -75,27 +75,29 @@ void Camera::Render(World world)
             glm::vec3 target_pixel = p1 + float(u) * dx + float(v) * dy;
 
             Ray ray(position, target_pixel);
-            buffer[u][v] = world.Spawn(ray);
+            glm::vec3 temp = world.Spawn(ray);
+
+            float zed = glm::max(glm::max(temp.x, temp.y), temp.z);
+
+            if (zed > toneMax)
+            {
+                toneMax = zed;
+            }
+
+            buffer[u][v] = temp;
         }
     }
 
-    // TODO: Loop through the film plane buffer and apply a tone reproduction operator.
-        // define a max irradiance value [0, max]
-        // vec3 values, need to apply to xyz
-        // scale down to [0, 1]
-        // Then, scale to [0, 255] for RGB
-
+    // Tone Reproduction
     for (uint v = 0; v < imageHeight; v++)
     {
         for (uint u = 0; u < imageWidth; u++)
         {
-            glm::vec3 irradiance = buffer[u][v];
+            glm::vec3 irradiance = buffer[u][v] / toneMax;
 
-            uint r = (uint)glm::clamp(irradiance.x * 255.0f, 0.0f, 255.0f);
-            uint g = (uint)glm::clamp(irradiance.y * 255.0f, 0.0f, 255.0f);
-            uint b = (uint)glm::clamp(irradiance.z * 255.0f, 0.0f, 255.0f);
-
-            // TODO: properly introduce tone reproduction
+            uint r = (uint)(irradiance.x * 255.0f);
+            uint g = (uint)(irradiance.y * 255.0f);
+            uint b = (uint)(irradiance.z * 255.0f);
 
             image.setPixel(sf::Vector2u(u, v), sf::Color(r, g, b));
         }

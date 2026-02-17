@@ -46,8 +46,7 @@ Point Triangle::Intersect(Ray ray)
 
     glm::vec3 I = glm::normalize(O - P);
 
-
-    return Point(w, point, normal, I);// , this);
+    return Point(w, point, normal, I);
 
 }
 

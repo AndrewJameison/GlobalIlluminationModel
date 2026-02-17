@@ -3,7 +3,6 @@
 
 #define uint unsigned int
 
-
 const uint imageWidth = 800;
 const uint imageHeight = 600;
 const float maxIValue = 1.0f;

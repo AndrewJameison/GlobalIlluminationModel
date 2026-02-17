@@ -31,12 +31,15 @@ glm::vec3 Phong::Illuminate(Point point, Object* obj)
         glm::vec3 L = lights[i].GetIrradiance();
 
         // Direction of the incoming light
-        glm::vec3 S = shadows[i];
-        Diffuse += L * obj->GetDiffuse() * glm::dot(S, N);
+        glm::vec3 S = glm::normalize(shadows[i]);
+        float ndots = glm::dot(S, N);
+        Diffuse += L * obj->GetDiffuse() * ndots;
 
         // The perfect mirror reflection of the incoming light
-        glm::vec3 R = glm::normalize(glm::reflect(S, N));
-        Specular += L * obj->GetSpecular() * glm::pow(glm::dot(R, V), ke);
+		// NOTE: made the S here negative on a recc. but no noticeable difference
+        glm::vec3 R = glm::normalize(glm::reflect(-S, N));
+        float rdotv = glm::dot(R, V);
+        Specular += L * obj->GetSpecular() * (float)(glm::pow(rdotv, 10));
     }
 
     return ka * Ambient + kd * Diffuse + ks * Specular;

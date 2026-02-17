@@ -4,6 +4,8 @@
 
 // TODO: create a phong Blinn child class of the model (1pt)
 
+// TODO: create a struct to pass along intersection data, not cram it into point
+
 // NOTE: If there is no intersection (point->GetDistance() == INFINITY)...
 // ...all illumination models should have a condition to return some 'background' illumination
 
@@ -16,5 +18,5 @@ public:
 	glm::vec3 virtual Illuminate(Point point, Object* obj) = 0;
 
 protected:
-	glm::vec3 ambient = glm::vec3(0.0f);
+	glm::vec3 ambient = glm::vec3(50.0f);
 };

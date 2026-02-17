@@ -18,4 +18,5 @@ private:
 	Illumination* model;
 	std::vector<Light> lights;
 	std::vector<Object*> objects;
+	glm::vec3 offset = glm::vec3(1.001f);
 };

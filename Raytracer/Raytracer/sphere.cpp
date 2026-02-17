@@ -1,5 +1,7 @@
 #include "sphere.hpp"
 
+float s = 0.000000001f;
+
 // aka a WHOLE LOT OF MATH
 Point Sphere::Intersect(Ray ray)
 {
@@ -26,7 +28,7 @@ Point Sphere::Intersect(Ray ray)
         // No intersection
         return Point();
     }
-    else if (d == 0)
+    else if (d > -s && d < s)
     {
         // One intersection
         w = -B / 2.0f;
@@ -39,7 +41,7 @@ Point Sphere::Intersect(Ray ray)
         float w2 = (-B + root) / 2.0f;
         w = glm::min(w1, w2);
 
-        if (w < 0)
+        if (w < 0.0f)
         {
             w = glm::max(w1, w2);
         }

@@ -28,7 +28,7 @@ Point Plane::Intersect(Ray ray)
 
     glm::vec3 I = glm::normalize(O - P);
 
-    return Point(w, P, normal, I);//, this);
+    return Point(w, P, normal, I);
 }
 
 Plane::Plane(glm::vec3 o, glm::vec3 n, glm::vec3 d, glm::vec3 s)
