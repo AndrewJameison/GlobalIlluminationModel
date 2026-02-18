@@ -1,10 +1,10 @@
 #pragma once
 #include "illumination.hpp"
 
-class Phong : public Illumination {
+class PhongBlinn : public Illumination {
 public:
 	glm::vec3 Illuminate(Point point, Object* obj) override;
-	Phong(float a = 0.15f, float d = 0.6f, float s = 0.25f, int e = 8) : ka(a), kd(d), ks(s), ke(e) {}
+	PhongBlinn(float a = 0.25f, float d = 0.55f, float s = 0.30f, int e = 10) : ka(a), kd(d), ks(s), ke(e) {}
 
 private:
 	// NOTE: the sum of ka kd ks MUST be equal to 1.0f
@@ -18,7 +18,7 @@ private:
 	/// Diffuse scale
 	/// </summary>
 	float kd;
-	
+
 	/// <summary>
 	/// Specular scale
 	/// </summary>

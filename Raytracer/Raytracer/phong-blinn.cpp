@@ -1,10 +1,8 @@
-#include "phong.hpp"
+#include "phong-blinn.hpp"
 #include "object.hpp"
 
-glm::vec3 Phong::Illuminate(Point point, Object* obj)
+glm::vec3 PhongBlinn::Illuminate(Point point, Object* obj)
 {
-	// TODO: Fix the weird edge highlights around the diffuse section
-
     // No intersection, return a background ambient light
     if (obj == nullptr)
     {
@@ -16,8 +14,8 @@ glm::vec3 Phong::Illuminate(Point point, Object* obj)
 
     // Incoming ray direction (initially the camera)
     glm::vec3 V = point.GetIncoming();
-    
-	glm::vec3 Ambient = obj->GetDiffuse() * ambient;
+
+    glm::vec3 Ambient = obj->GetDiffuse() * ambient;
 
     glm::vec3 Diffuse = glm::vec3(0.0f);
 
@@ -36,10 +34,11 @@ glm::vec3 Phong::Illuminate(Point point, Object* obj)
         glm::vec3 S = glm::normalize(shadows[i]);
         Diffuse += L * obj->GetDiffuse() * glm::dot(S, N);
 
-        // The perfect mirror reflection of the incoming light
-		// NOTE: made the S here negative on a recc. but no noticeable difference
-        glm::vec3 R = glm::normalize(glm::reflect(-S, N));
-        Specular += L * obj->GetSpecular() * (float)(glm::pow(glm::dot(R, V), ke));
+		// The half-way vector between the incoming light and the viewer
+
+        // TODO: Fix the weird edge highlights around the diffuse section
+        glm::vec3 H = glm::normalize(S + V);
+        Specular += L * obj->GetSpecular() * (float)(glm::pow(glm::dot(H, N), ke));
     }
 
     return ka * Ambient + kd * Diffuse + ks * Specular;

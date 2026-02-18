@@ -22,6 +22,7 @@
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="light.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="phong-blinn.cpp" />
     <ClCompile Include="phong.cpp" />
     <ClCompile Include="point.cpp" />
     <ClCompile Include="ray.cpp" />
@@ -35,6 +36,7 @@
     <ClInclude Include="illumination.hpp" />
     <ClInclude Include="light.hpp" />
     <ClInclude Include="object.hpp" />
+    <ClInclude Include="phong-blinn.hpp" />
     <ClInclude Include="phong.hpp" />
     <ClInclude Include="point.hpp" />
     <ClInclude Include="ray.hpp" />

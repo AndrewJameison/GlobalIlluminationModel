@@ -30,6 +30,18 @@ void Camera::Render(World world)
     sf::RenderWindow window(sf::VideoMode(imageSize), "Raytracer works!");
     sf::Image image(imageSize, sf::Color::White);
     sf::Texture texture;
+    
+    // Pseudo rotated grid pattern values for supersampling
+    // TODO: Add a supersampling option (toggle) and number of samples (rays) to apply for each pixel, then average them
+        // NOTE: This is a really good place for a further project. Wait until I have more time to work on this
+        // NOTE: To improve performance with anti-aliasing, add a "pre sampling" step to the antialiasing for edges and the like
+        // NOTE: Another performance improvement is to take a few "test" samples to gauge similarity, then proceed with the rest if sufficently different
+    const glm::vec3 sampleOff[4] = { 
+        glm::vec3(0.1f, 0.4f, 0.0f), 
+        glm::vec3(0.4f, -0.1f, 0.0f), 
+        glm::vec3(-0.1f, -0.4f, 0.0f), 
+        glm::vec3(-0.4f, 0.1f, 0.0f) 
+    };
 
     if (auto _ = !texture.loadFromImage(image))
         printf("ERROR: unable to load texture from image\n");
@@ -60,31 +72,31 @@ void Camera::Render(World world)
     glm::vec3 dx = (glm::vec3(xWorld) / xWorld.w) - p1;
     glm::vec3 dy = (glm::vec3(yWorld) / yWorld.w) - p1;
 
-
-    // TODO: Add a supersampling option (toggle) and number of samples (rays) to apply for each pixel, then average them
-        // TODO: Use the rotated grid pattern https://en.wikipedia.org/wiki/Supersampling
-        // NOTE: This is a really good place for a further project. Wait until I have more time to work on this
-        // NOTE: To improve performance with anti-aliasing, we can look at propable locations to spend our time like edges
-        // ...one way to implment is by taking a few "test" samples to gauge similarity, then proceed with the rest if sufficently different
-
     // For each pixel on the film plane, spawn a ray in with world coordinates
     for (uint v = 0; v < imageHeight; v++)
     {
         for (uint u = 0; u < imageWidth; u++)
         {
-            glm::vec3 target_pixel = p1 + float(u) * dx + float(v) * dy;
+            glm::vec3 sample = glm::vec3(0.0f);
 
-            Ray ray(position, target_pixel);
-            glm::vec3 temp = world.Spawn(ray);
-
-            float zed = glm::max(glm::max(temp.x, temp.y), temp.z);
-
-            if (zed > toneMax)
+            // Post supersampling of the pixel space using a pseudo rotated grid pattern
+            // TODO: replace with a vector of samples based on a samples parameter
+            for (uint i = 0; i < 4; i++)
             {
-                toneMax = zed;
+                glm::vec3 target_pixel = p1 + float(u) * dx + float(v) * dy;
+				target_pixel.x += sampleOff[i].x * pxWidth;
+				target_pixel.y += sampleOff[i].y * pxHeight;
+                sample += world.Spawn(Ray(position, target_pixel));
             }
 
-            buffer[u][v] = temp;
+            float toneSample = glm::max(glm::max(sample.x, sample.y), sample.z);
+
+            if (toneSample > toneMax)
+            {
+                toneMax = toneSample;
+            }
+
+            buffer[u][v] = sample;
         }
     }
 

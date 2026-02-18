@@ -5,6 +5,7 @@
 #include "triangle.hpp"
 #include "plane.hpp"
 #include "phong.hpp"
+#include "phong-blinn.hpp"
 
 // Written by Andrew Jameison for Joe Geigel's Global Illumination course CSCI 711.01
 // This program uses SFML 2.6 for displaying the image to the screen
@@ -50,17 +51,15 @@ const glm::vec3 WORLD_UP = glm::vec3(0.0f, 1.0f, 0.0f);
 int main()
 {
     // NOTE: Any objects have to be created using pointers because of the abstract base Object class
-    Phong* lightModel = new Phong();
+	PhongBlinn* lightModel = new PhongBlinn();
     World world = World(lightModel);
     
     // TODO: make the extra credit LAST, have pictures of each stage of the project
-        // TODO: Multiple lighting (1pt)
         // TODO: Second Illumination model (1pt)
-        // TODO: Super sampling (1pt)
 
     // TODO: puts lights back on the heap? Looping through them in camera is expensive apparently.
     world.Add(Light(L1_LIGHT_POS, L1_IRRADIANCE));
-    //world.Add(Light(L2_LIGHT_POS, L2_IRRADIANCE));
+    world.Add(Light(L2_LIGHT_POS, L2_IRRADIANCE));
 
     // Create and add objects to the world
     world.Add(new Sphere(S1_RADIUS, S1_ORIGIN));

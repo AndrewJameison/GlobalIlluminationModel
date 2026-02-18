@@ -26,6 +26,5 @@ class Camera {
         filmPlaneBuffer* buffer;
     
         glm::vec3 position;
-        glm::mat4 viewMatrix; // moves coords from world space to camera space
-
+        glm::mat4 viewMatrix; // moves coords from camera space to world space
 };
