@@ -18,5 +18,5 @@ public:
 	glm::vec3 virtual Illuminate(Point point, Object* obj) = 0;
 
 protected:
-	glm::vec3 ambient = glm::vec3(50.0f);
+	glm::vec3 ambient = glm::vec3(100.0f);
 };

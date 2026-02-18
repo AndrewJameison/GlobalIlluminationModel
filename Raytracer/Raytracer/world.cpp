@@ -61,9 +61,10 @@ glm::vec3 World::Spawn(Ray ray)
             // Cast a shadow ray to the light source
             bool isClear = true;
 
-            glm::vec3 temp = glm::normalize(light.GetPosition() - intersection.GetPosition()) * 0.01f;
+            // Create a small offset to prevent intersection the object itself
+            glm::vec3 offset = glm::normalize(light.GetPosition() - intersection.GetPosition()) * 0.01f;
 
-            Ray shadowRay(intersection.GetPosition() + temp, light.GetPosition());
+            Ray shadowRay(intersection.GetPosition() + offset, light.GetPosition());
 
             for (Object* obj : objects)
             {

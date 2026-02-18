@@ -42,7 +42,7 @@ Point Triangle::Intersect(Ray ray)
     }
 
     glm::vec3 point = O + w * D;
-    glm::vec3 normal = glm::cross(e1, e2);
+    glm::vec3 normal = glm::normalize(glm::cross(e1, e2));
 
     glm::vec3 I = glm::normalize(O - P);
 

@@ -14,17 +14,17 @@
 
 // ----------------------- Objects -----------------------
 // Sphere 1
-const float S1_RADIUS = 3.0f;
-const glm::vec3 S1_ORIGIN = glm::vec3(-5.0f, 4.0f, -0.15f);
+const float S1_RADIUS = 2.0f;
+const glm::vec3 S1_ORIGIN = glm::vec3(-5.0f, 4.0f, -1.0f);
 // Sphere 2
-const float S2_RADIUS = 3.0f;
-const glm::vec3 S2_ORIGIN = glm::vec3(-3.0f, 3.0f, 1.2f);
+const float S2_RADIUS = 2.0f;
+const glm::vec3 S2_ORIGIN = glm::vec3(-2.0f, 3.0f, 1.0f);
 
 // Platform
-const glm::vec3 v0 = glm::vec3(-10.0f, 0.0f, -50.0f);
-const glm::vec3 v1 = glm::vec3(10.0f, 0.0f, -50.0f);
-const glm::vec3 v2 = glm::vec3(10.0f, 0.0f, 50.0f);
-const glm::vec3 v3 = glm::vec3(-10.0f, 0.0f, 50.0f);
+const glm::vec3 v0 = glm::vec3(-10.0f, 0.0f, -20.0f);
+const glm::vec3 v1 = glm::vec3(10.0f, 0.0f, -20.0f);
+const glm::vec3 v2 = glm::vec3(10.0f, 0.0f, 20.0f);
+const glm::vec3 v3 = glm::vec3(-10.0f, 0.0f, 20.0f);
 
 // Plane
 const glm::vec3 PLANE_ORIGIN = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -32,7 +32,7 @@ const glm::vec3 PLANE_NORMAL = glm::vec3(0.0f, 1.0f, 0.0f);
 
 // ----------------------- Lighting -----------------------
 // Light 1
-const glm::vec3 L1_LIGHT_POS = glm::vec3(-5.0f, 14.0f, -4.0f);
+const glm::vec3 L1_LIGHT_POS = glm::vec3(-5.0f, 6.0f, -4.0f);
 const glm::vec3 L1_IRRADIANCE = glm::vec3(100.0f, 100.0f, 100.0f);
 // Light 2
 const glm::vec3 L2_LIGHT_POS = glm::vec3(-8.0f, 10.0f, -4.0f);
@@ -43,8 +43,8 @@ const glm::vec3 L2_IRRADIANCE = glm::vec3(100.0f, 100.0f, 100.0f);
 const float FOCAL_LENGTH = 1.0f;
 const float FOV = 100.0f;
 
-const glm::vec3 CAM_ORIGIN = glm::vec3(-5.0f, 3.0f, -5.0f);
-const glm::vec3 CAM_TARGET = glm::vec3(-5.0f, 3.0f, 6.0f);
+const glm::vec3 CAM_ORIGIN = glm::vec3(-5.0f, 3.5f, -5.0f);
+const glm::vec3 CAM_TARGET = glm::vec3(-5.0f, 3.5f, 6.0f);
 const glm::vec3 WORLD_UP = glm::vec3(0.0f, 1.0f, 0.0f);
 
 int main()
@@ -60,14 +60,14 @@ int main()
 
     // TODO: puts lights back on the heap? Looping through them in camera is expensive apparently.
     world.Add(Light(L1_LIGHT_POS, L1_IRRADIANCE));
-    world.Add(Light(L2_LIGHT_POS, L2_IRRADIANCE));
+    //world.Add(Light(L2_LIGHT_POS, L2_IRRADIANCE));
 
     // Create and add objects to the world
     world.Add(new Sphere(S1_RADIUS, S1_ORIGIN));
     world.Add(new Sphere(S2_RADIUS, S2_ORIGIN));
 
-    world.Add(new Triangle(v0, v1, v2));
-    world.Add(new Triangle(v2, v3, v0));
+    world.Add(new Triangle(v2, v1, v0));
+    world.Add(new Triangle(v0, v3, v2));
 	//world.Add(new Plane(PLANE_ORIGIN, PLANE_NORMAL));
     
     // Setup Camera
