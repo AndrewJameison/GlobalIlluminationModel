@@ -48,6 +48,9 @@
     <ClCompile Include="phong-blinn.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="mesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera.hpp">
@@ -84,6 +87,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="phong-blinn.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
