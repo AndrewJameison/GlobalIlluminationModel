@@ -123,9 +123,9 @@ void Mesh::InitSingleMesh(const aiMesh* paiMesh)
 	{
 		const aiFace& Face = paiMesh->mFaces[i];
 		assert(Face->mNumIndices == 3);
-		m_Indices.push_back(Face.mIndices[i]);
-		m_Indices.push_back(Face.mIndices[1]);
-		m_Indices.push_back(Face.mIndices[2]);
+		//m_Indices.push_back(Face.mIndices[i]);
+		//m_Indices.push_back(Face.mIndices[1]);
+		//m_Indices.push_back(Face.mIndices[2]);
 	}
 }
 
@@ -153,6 +153,6 @@ void Mesh::Render(World world)
 
 		// TODO: create and add a triangle to world
 
-		world.Add(new Triangle());
+		//world.Add(new Triangle());
 	}
 }

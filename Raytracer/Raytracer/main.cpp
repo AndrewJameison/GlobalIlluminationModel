@@ -63,17 +63,17 @@ int main()
     // NOTE: Any objects have to be created using pointers because of the abstract base Object class
 	PhongBlinn* lightModel = new PhongBlinn();
     World world = World(lightModel);
-    Mesh* pMesh = new Mesh();
+    //Mesh* pMesh = new Mesh();
 
     // TODO: puts lights back on the heap? Looping through them in camera is expensive apparently.
     world.Add(Light(L1_LIGHT_POS, L1_IRRADIANCE));
     world.Add(Light(L2_LIGHT_POS, L2_IRRADIANCE));
 
-    // Create and add objects to the world
-    //world.Add(new Sphere(S1_RADIUS, S1_ORIGIN));
-    //world.Add(new Sphere(S2_RADIUS, S2_ORIGIN));
+     //Create and add objects to the world
+    world.Add(new Sphere(S1_RADIUS, S1_ORIGIN));
+    world.Add(new Sphere(S2_RADIUS, S2_ORIGIN));
 
-    pMesh->Render(world);
+    //pMesh->Render(world);
 
     world.Add(new Triangle(v2, v1, v0));
     world.Add(new Triangle(v0, v3, v2));
