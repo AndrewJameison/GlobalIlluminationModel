@@ -31,11 +31,10 @@ Point Plane::Intersect(Ray ray)
     return Point(w, P, normal, I);
 }
 
-Plane::Plane(glm::vec3 o, glm::vec3 n, glm::vec3 d, glm::vec3 s)
+Plane::Plane(glm::vec3 o, glm::vec3 n, Material* mat)
 {
     origin = o;
     normal = n;
-    diffuse = d;
-    specular = s;
+    material = mat;
 }
 

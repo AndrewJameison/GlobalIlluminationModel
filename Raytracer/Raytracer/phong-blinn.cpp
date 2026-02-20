@@ -9,13 +9,15 @@ glm::vec3 PhongBlinn::Illuminate(Point point, Object* obj)
         return ambient;
     }
 
+    Material* material = obj->GetMaterial();
+
     // The normal of the intersection
     glm::vec3 N = point.GetNormal();
 
     // Incoming ray direction (initially the camera)
     glm::vec3 V = point.GetIncoming();
 
-    glm::vec3 Ambient = obj->GetDiffuse() * ambient;
+    glm::vec3 Ambient = material->GetDiffuse() * ambient;
 
     glm::vec3 Diffuse = glm::vec3(0.0f);
 
@@ -32,13 +34,13 @@ glm::vec3 PhongBlinn::Illuminate(Point point, Object* obj)
 
         // Direction of the incoming light
         glm::vec3 S = glm::normalize(shadows[i]);
-        Diffuse += L * obj->GetDiffuse() * glm::dot(S, N);
+        Diffuse += L * material->GetDiffuse() * glm::dot(S, N);
 
 		// The half-way vector between the incoming light and the viewer
 
         // TODO: Fix the weird edge highlights around the diffuse section
         glm::vec3 H = glm::normalize(S + V);
-        Specular += L * obj->GetSpecular() * (float)(glm::pow(glm::dot(H, N), ke));
+        Specular += L * material->GetSpecular() * (float)(glm::pow(glm::dot(H, N), ke));
     }
 
     return ka * Ambient + kd * Diffuse + ks * Specular;

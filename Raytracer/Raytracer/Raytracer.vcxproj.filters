@@ -48,6 +48,12 @@
     <ClCompile Include="phong-blinn.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="m_phong.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="m_checker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera.hpp">
@@ -84,6 +90,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="phong-blinn.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="material.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="m_phong.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="m_checker.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

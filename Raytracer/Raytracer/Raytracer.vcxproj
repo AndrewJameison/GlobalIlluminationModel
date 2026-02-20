@@ -22,7 +22,9 @@
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="light.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="m_checker.cpp" />
     <ClCompile Include="phong-blinn.cpp" />
+    <ClCompile Include="m_phong.cpp" />
     <ClCompile Include="phong.cpp" />
     <ClCompile Include="point.cpp" />
     <ClCompile Include="ray.cpp" />
@@ -35,8 +37,11 @@
     <ClInclude Include="camera.hpp" />
     <ClInclude Include="illumination.hpp" />
     <ClInclude Include="light.hpp" />
+    <ClInclude Include="material.hpp" />
+    <ClInclude Include="m_checker.hpp" />
     <ClInclude Include="object.hpp" />
     <ClInclude Include="phong-blinn.hpp" />
+    <ClInclude Include="m_phong.hpp" />
     <ClInclude Include="phong.hpp" />
     <ClInclude Include="point.hpp" />
     <ClInclude Include="ray.hpp" />

@@ -53,9 +53,6 @@ int main()
     // NOTE: Any objects have to be created using pointers because of the abstract base Object class
 	PhongBlinn* lightModel = new PhongBlinn();
     World world = World(lightModel);
-    
-    // TODO: make the extra credit LAST, have pictures of each stage of the project
-        // TODO: Second Illumination model (1pt)
 
     // TODO: puts lights back on the heap? Looping through them in camera is expensive apparently.
     world.Add(Light(L1_LIGHT_POS, L1_IRRADIANCE));

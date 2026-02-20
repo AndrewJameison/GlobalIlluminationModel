@@ -11,13 +11,15 @@ glm::vec3 Phong::Illuminate(Point point, Object* obj)
         return ambient;
     }
 
+    Material* material = obj->GetMaterial();
+
     // The normal of the intersection
     glm::vec3 N = point.GetNormal();
 
     // Incoming ray direction (initially the camera)
     glm::vec3 V = point.GetIncoming();
     
-	glm::vec3 Ambient = obj->GetDiffuse() * ambient;
+	glm::vec3 Ambient = material->GetDiffuse() * ambient;
 
     glm::vec3 Diffuse = glm::vec3(0.0f);
 
@@ -34,12 +36,12 @@ glm::vec3 Phong::Illuminate(Point point, Object* obj)
 
         // Direction of the incoming light
         glm::vec3 S = glm::normalize(shadows[i]);
-        Diffuse += L * obj->GetDiffuse() * glm::dot(S, N);
+        Diffuse += L * material->GetDiffuse() * glm::dot(S, N);
 
         // The perfect mirror reflection of the incoming light
 		// NOTE: made the S here negative on a recc. but no noticeable difference
         glm::vec3 R = glm::normalize(glm::reflect(-S, N));
-        Specular += L * obj->GetSpecular() * (float)(glm::pow(glm::dot(R, V), ke));
+        Specular += L * material->GetSpecular() * (float)(glm::pow(glm::dot(R, V), ke));
     }
 
     return ka * Ambient + kd * Diffuse + ks * Specular;

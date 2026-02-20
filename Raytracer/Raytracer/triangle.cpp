@@ -50,11 +50,10 @@ Point Triangle::Intersect(Ray ray)
 
 }
 
-Triangle::Triangle(glm::vec3 i, glm::vec3 j, glm::vec3 k, glm::vec3 d, glm::vec3 s)
+Triangle::Triangle(glm::vec3 i, glm::vec3 j, glm::vec3 k, Material* mat)
 {
     v0 = i;
     v1 = j;
     v2 = k;
-    diffuse = d;
-    specular = s;
+    material = mat;
 }

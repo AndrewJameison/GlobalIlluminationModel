@@ -64,10 +64,9 @@ Point Sphere::Intersect(Ray ray)
     return Point(w, P, N, I);
 }
 
-Sphere::Sphere(float r, glm::vec3 o, glm::vec3 d, glm::vec3 s)
+Sphere::Sphere(float r, glm::vec3 o, Material* mat)
 {
     radius = r;
     origin = o;
-    diffuse = d;
-    specular = s;
+    material = mat;
 }
