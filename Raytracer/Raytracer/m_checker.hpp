@@ -6,10 +6,10 @@
 /// </summary>
 class CheckersMaterial : public Material {
 public:
-	glm::vec3 GetDiffuse(glm::vec3 obj_pos) override;
+	glm::vec3 GetDiffuse(glm::vec2 uv) override;
 	glm::vec3 GetSpecular() override { return specular; }
 
-	CheckersMaterial(float w = 10.0f,
+	CheckersMaterial(float w = 1.0f,
 					glm::vec3 b1 = glm::vec3(100.0f, 100.0f, 0.0f), 
 					glm::vec3 b2 = glm::vec3(100.0f, 0.0f, 0.0f), 
 					glm::vec3 s = glm::vec3(100.0f));

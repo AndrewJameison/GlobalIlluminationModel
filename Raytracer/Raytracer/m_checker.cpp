@@ -1,9 +1,26 @@
 #include "m_checker.hpp"
 
-glm::vec3 CheckersMaterial::GetDiffuse(glm::vec3 obj_pos)
+glm::vec3 CheckersMaterial::GetDiffuse(glm::vec2 uv)
 {
-    // The whole uv thing
-    return glm::vec3();
+    // TODO: should check_width be a world space value? It feels inconsistent between objects
+
+    // TODO: add anti-aliasing to the checker matt
+
+    float u = uv.x;
+    float v = uv.y;
+
+    // Find the texel value of the given uv coordinates
+    int uu = int(u / checker_width) % 2;
+    int vv = int(v / checker_width) % 2;
+
+    if ((uu && vv) || (!uu && !vv))
+    {
+        return brick_color_1;
+    }
+    else
+    {
+        return brick_color_2;
+    }
 }
 
 CheckersMaterial::CheckersMaterial(float w, glm::vec3 b1, glm::vec3 b2, glm::vec3 s)

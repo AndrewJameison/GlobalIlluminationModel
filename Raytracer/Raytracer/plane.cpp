@@ -31,10 +31,21 @@ Point Plane::Intersect(Ray ray)
     return Point(w, P, normal, I);
 }
 
-Plane::Plane(glm::vec3 o, glm::vec3 n, Material* mat)
+Plane::Plane(glm::vec3 n, glm::mat4 t, Material* mat)
 {
-    origin = o;
     normal = n;
     material = mat;
+    LocalT = t;
+
+    glm::vec4 o = t * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+    origin = glm::vec3(o / o.w);
+}
+
+glm::vec2 Plane::Projector(glm::vec3 intersection)
+{
+    float u = (intersection.z + 1) / 2.0f;
+    float v = (intersection.x + 1) / 2.0f;
+
+    return glm::vec2(u, v);
 }
 

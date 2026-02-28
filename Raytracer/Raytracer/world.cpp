@@ -17,13 +17,8 @@ World::~World()
     {
         delete obj;
     }
-// for (Light* light : lights)
-// {
-//     delete light;
-// }
 
     objects.clear();
-    //lights.clear();
 }
 
 void World::Add(Object* obj)
@@ -56,7 +51,7 @@ glm::vec3 World::Spawn(Ray ray)
     // Return the resulting color value of the ray's journey
     if (object != nullptr)
     {
-        for (Light light : lights)
+        for (const Light& light : lights)
         {
             // Cast a shadow ray to the light source
             bool isClear = true;

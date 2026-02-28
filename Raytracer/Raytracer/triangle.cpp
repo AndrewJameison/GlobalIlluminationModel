@@ -50,10 +50,18 @@ Point Triangle::Intersect(Ray ray)
 
 }
 
-Triangle::Triangle(glm::vec3 i, glm::vec3 j, glm::vec3 k, Material* mat)
+Triangle::Triangle(glm::vec3 i, glm::vec3 j, glm::vec3 k, Material* mat, glm::mat4 t)
 {
     v0 = i;
     v1 = j;
     v2 = k;
     material = mat;
+    LocalT = t;
+}
+
+glm::vec2 Triangle::Projector(glm::vec3 intersection)
+{
+    // TODO: since each vertex is never going to change it's texel value, maybe we can store that information per vertex to speed up calculations on large objects
+    
+    return glm::vec2();
 }

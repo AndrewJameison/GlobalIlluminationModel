@@ -1,6 +1,8 @@
 #include "sphere.hpp"
+#include <glm/ext/scalar_constants.hpp>
 
 float s = 0.000000001f;
+const float PI = glm::pi<float>();
 
 // aka a WHOLE LOT OF MATH
 Point Sphere::Intersect(Ray ray)
@@ -64,9 +66,27 @@ Point Sphere::Intersect(Ray ray)
     return Point(w, P, N, I);
 }
 
-Sphere::Sphere(float r, glm::vec3 o, Material* mat)
+Sphere::Sphere(float r, glm::mat4 t, Material* mat)
 {
     radius = r;
-    origin = o;
     material = mat;
+    LocalT = glm::inverse(t);
+
+    glm::vec4 o = t * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+    origin = glm::vec3(o / o.w);
+}
+
+glm::vec2 Sphere::Projector(glm::vec3 intersection)
+{
+    glm::vec4 i = LocalT * glm::vec4(intersection, 1.0f);
+
+    glm::vec3 local = glm::vec3(i / i.w);
+
+    float phi = glm::acos((local.y) / radius);
+    float theta = glm::atan((local.x) / (local.z));
+
+    float u = glm::mod(theta, (2.0f * PI / 2.0f * PI));
+    float v = PI - phi / PI;
+
+    return glm::vec2(u, v);
 }

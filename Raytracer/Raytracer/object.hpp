@@ -13,7 +13,19 @@ public:
 	Material* GetMaterial() const { return material; }
 
 	virtual Point Intersect(Ray ray) = 0;
+	
+	/// <summary>
+	/// Moves local coordinates into uv space
+	/// </summary>
+	/// <param name="intersection">The global coordinates of the intersection</param>
+	/// <returns>Texture space UV coordinates</returns>
+	virtual glm::vec2 Projector(glm::vec3 intersection) = 0;
 
 protected:
+	/// <summary>
+	/// Transforms world coordinates into local space
+	/// </summary>
+	glm::mat4 LocalT;
+
 	Material* material;
 };

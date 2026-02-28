@@ -1,8 +1,6 @@
-#include <SFML/graphics.hpp>
-#include "SFML/System.hpp"
 #include <iostream>
+#include "atmosphere.hpp"
 #include "camera.hpp"
-#include <glm/ext/matrix_transform.hpp>
 
 Camera::Camera(float focalLen, float fov, glm::vec3 pos)
 {
@@ -88,6 +86,9 @@ void Camera::Render(World world)
 				target_pixel.y += sampleOff[i].y * pxHeight;
                 sample += world.Spawn(Ray(position, target_pixel));
             }
+
+            glm::vec3 target_pixel = p1 + float(u) * dx + float(v) * dy;
+            sample += world.Spawn(Ray(position, target_pixel));
 
             float toneSample = glm::max(glm::max(sample.x, sample.y), sample.z);
 
