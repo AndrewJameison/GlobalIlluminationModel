@@ -2,9 +2,10 @@
 #include "sphere.hpp"
 #include "triangle.hpp"
 
-World::World(Illumination* lightModel)
+World::World(Illumination* lightModel, Atmosphere atmo)
 {
     model = lightModel;
+    atmosphere = atmo;
     objects = std::vector<Object*>();
     lights = std::vector<Light>();
 }
@@ -49,7 +50,7 @@ glm::vec3 World::Spawn(Ray ray)
     }
     
     // Return the resulting color value of the ray's journey
-    if (object != nullptr)
+    if (object)
     {
         for (const Light& light : lights)
         {
@@ -79,8 +80,24 @@ glm::vec3 World::Spawn(Ray ray)
                 intersection.AddLight(light, shadowRay.GetDirection());
             }
         }
+        
+        return model->Illuminate(intersection, object);
     }
 
-    return model->Illuminate(intersection, object);
+    // We use atmospheric lighting
+    else
+    {
+        // Does the ray intersect the planetory body? (the intersection test is against the Earth here
+        // not against the atmosphere). If the ray intersects the Earth body, we pass that value into w.
+        // If the viewing ray doesn't hit the Earth, or course, the ray
+        // is then bounded to the range [0:INF]. In the method computeIncidentLight() we then
+        // compute where this primary ray intersects the atmosphere, and we limit the max t range 
+        // of the ray to the point where it leaves the atmosphere.
+        float w = atmosphere.IntersectPlanet(ray).GetDistance();
+
+        // The *viewing or camera ray* is bounded to the range [0:w]
+        return atmosphere.computeIncidentLight(ray, 0, w);
+    }
+
 }
 

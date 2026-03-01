@@ -17,6 +17,8 @@ public:
 	/// <returns>A vec3 irradiance value from this particular model</returns>
 	glm::vec3 virtual Illuminate(Point point, Object* obj) = 0;
 
+
+// TODO: get rid of ambient color
 protected:
 	glm::vec3 ambient = glm::vec3(100.0f);
 };

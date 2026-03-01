@@ -3,12 +3,6 @@
 
 glm::vec3 PhongBlinn::Illuminate(Point point, Object* obj)
 {
-    // No intersection, return a background ambient light
-    if (obj == nullptr)
-    {
-        return ambient;
-    }
-
     Material* material = obj->GetMaterial();
 
     glm::vec2 uv = obj->Projector(point.GetPosition());

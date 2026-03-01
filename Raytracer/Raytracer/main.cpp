@@ -60,10 +60,11 @@ int main()
 {
     // NOTE: Any objects have to be created using pointers because of the abstract base Object class
 	PhongBlinn* lightModel = new PhongBlinn();
-    World world = World(lightModel);
+    Atmosphere atmosphere = Atmosphere();
+    World world = World(lightModel, atmosphere);
 
     world.Add(Light(L1_LIGHT_POS, L1_IRRADIANCE));
-    world.Add(Light(L2_LIGHT_POS, L2_IRRADIANCE));
+    //world.Add(Light(L2_LIGHT_POS, L2_IRRADIANCE));
 
     // Create and add objects to the world
     world.Add(new Sphere(S1_RADIUS, S1_MODEL_T));

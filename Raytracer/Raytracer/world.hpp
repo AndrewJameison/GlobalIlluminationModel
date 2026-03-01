@@ -5,18 +5,19 @@
 #include "object.hpp"
 #include "light.hpp"
 #include "illumination.hpp"
+#include "atmosphere.hpp"
 
 class World {
 public:
 	void Add(Object* obj);
 	void Add(Light light);
 	glm::vec3 Spawn(Ray ray);
-	World(Illumination* lightModel);
+	World(Illumination* lightModel, Atmosphere atmo);
 	~World();
 
 private:
 	Illumination* model;
+	Atmosphere atmosphere;
 	std::vector<Light> lights;
 	std::vector<Object*> objects;
-	glm::vec3 offset = glm::vec3(1.001f);
 };

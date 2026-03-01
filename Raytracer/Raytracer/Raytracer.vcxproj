@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="atmosphere.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="light.cpp" />
     <ClCompile Include="main.cpp" />
@@ -34,6 +35,7 @@
     <ClCompile Include="world.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="atmosphere.hpp" />
     <ClInclude Include="camera.hpp" />
     <ClInclude Include="illumination.hpp" />
     <ClInclude Include="light.hpp" />

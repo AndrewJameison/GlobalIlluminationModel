@@ -1,13 +1,34 @@
 #include "atmosphere.hpp"
 
-glm::vec3 Atmosphere::computeIncidentLight(const glm::vec3& orig, const glm::vec3& dir, float tmin, float tmax) const
+Atmosphere::Atmosphere(glm::vec3 sd, float er, float ar, float hr, float hm)
 {
-    float t0 = 0.0f, t1 = 0.0f;
+    glm::vec3 sunDirection = sd;  
+    float earthRadius = er;
+    float atmosphereRadius = ar;
+    float Hr = ar;
+    float Hm = hm;
 
-    //if (!raySphereIntersect(orig, dir, atmosphereRadius, t0, t1) || t1 < 0) return 0;
-    if (t0 > tmin && t0 > 0) tmin = t0;
-    if (t1 < tmax) tmax = t1;
+    planet = new Sphere(earthRadius);
+    atmosphere = new Sphere(atmosphereRadius);
+}
 
+glm::vec3 Atmosphere::computeIncidentLight(Ray ray, float tmin, float tmax)
+{
+    //float t0 = 0.0f, t1 = 0.0f;
+
+    //if (!IntersectPlanet(ray, t0, t1) || t1 < 0) return 0;
+    Point pt = atmosphere->Intersect(ray);
+    float w = pt.GetDistance();
+    if (w == INFINITY)
+    {
+        // TODO: implement lighting from outside of the atmosphere
+        return glm::vec3(0.0f);
+    }
+
+    // TODO: try from the inside of a sphere
+
+    glm::vec3 rayDir = ray.GetDirection();
+    glm::vec3 originPos = ray.GetPosition();
 
     uint32_t numSamples = 16;
     uint32_t numSamplesLight = 8;
@@ -15,12 +36,13 @@ glm::vec3 Atmosphere::computeIncidentLight(const glm::vec3& orig, const glm::vec
     float tCurrent = tmin;
     glm::vec3 sumR(0), sumM(0);  //mie and rayleigh contribution 
     float opticalDepthR = 0, opticalDepthM = 0;
-    float mu = dot(dir, sunDirection);  //mu in the paper which is the cosine of the angle between the sun direction and the ray direction 
+    float mu = dot(ray.GetDirection(), sunDirection);  //mu in the paper which is the cosine of the angle between the sun direction and the ray direction 
     float phaseR = 3.f / (16.f * glm::pi<float>() * (1 + mu * mu));
     float g = 0.76f;
     float phaseM = 3.f / (8.f * glm::pi<float>()) * ((1.f - g * g) * (1.f + mu * mu)) / ((2.f + g * g) * pow(1.f + g * g - 2.f * g * mu, 1.5f));
+
     for (uint32_t i = 0; i < numSamples; ++i) {
-        glm::vec3 samplePosition = orig + (tCurrent + segmentLength * 0.5f) * dir;
+        glm::vec3 samplePosition = originPos + (tCurrent + segmentLength * 0.5f) * rayDir;
         float height = samplePosition.length() - earthRadius;
         // compute optical depth for light
         float hr = exp(-height / Hr) * segmentLength;
@@ -28,11 +50,16 @@ glm::vec3 Atmosphere::computeIncidentLight(const glm::vec3& orig, const glm::vec
         opticalDepthR += hr;
         opticalDepthM += hm;
         // light optical depth
-        float t0Light, t1Light;
-        //raySphereIntersect(samplePosition, sunDirection, atmosphereRadius, t0Light, t1Light);
-        float segmentLengthLight = t1Light / numSamplesLight, tCurrentLight = 0;
+        //float t0Light = 0.0f, t1Light = 0.0f;
+        
+        Ray sampleDir(samplePosition, sunDirection);
+        //IntersectPlanet(sampleDir, t0Light, t1Light);
+        Point pt = atmosphere->Intersect(sampleDir);
+
+        float segmentLengthLight = pt.GetDistance() / numSamplesLight, tCurrentLight = 0;
         float opticalDepthLightR = 0, opticalDepthLightM = 0;
         uint32_t j;
+
         for (j = 0; j < numSamplesLight; ++j) {
             glm::vec3 samplePositionLight = samplePosition + (tCurrentLight + segmentLengthLight * 0.5f) * sunDirection;
             float heightLight = samplePositionLight.length() - earthRadius;
@@ -41,13 +68,14 @@ glm::vec3 Atmosphere::computeIncidentLight(const glm::vec3& orig, const glm::vec
             opticalDepthLightM += exp(-heightLight / Hm) * segmentLengthLight;
             tCurrentLight += segmentLengthLight;
         }
+
         if (j == numSamplesLight) {
             glm::vec3 tau = betaR * (opticalDepthR + opticalDepthLightR) + betaM * 1.1f * (opticalDepthM + opticalDepthLightM);
             glm::vec3 attenuation(exp(-tau.x), exp(-tau.y), exp(-tau.z));
             sumR += attenuation * hr;
             sumM += attenuation * hm;
-
         } 
+
         tCurrent += segmentLength; 
     } 
  
