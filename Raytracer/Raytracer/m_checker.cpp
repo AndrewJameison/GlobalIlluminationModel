@@ -7,13 +7,13 @@ glm::vec3 CheckersMaterial::GetDiffuse(glm::vec2 uv)
     // TODO: add anti-aliasing to the checker matt
 
     float u = uv.x;
-    float v = uv.y;
+    float v = uv.y; 
 
     // Find the texel value of the given uv coordinates
-    int uu = int(u / checker_width) % 2;
-    int vv = int(v / checker_width) % 2;
+    int uu = int(std::floor(u / checker_width)) % 2;
+    int vv = int(std::floor(v / checker_width)) % 2;
 
-    if ((uu && vv) || (!uu && !vv))
+    if ((uu + vv) % 2)
     {
         return brick_color_1;
     }

@@ -34,9 +34,9 @@ glm::vec3 Atmosphere::computeIncidentLight(Ray ray, float tmin, float tmax)
     uint32_t numSamplesLight = 8;
     float segmentLength = (tmax - tmin) / numSamples;
     float tCurrent = tmin;
-    glm::vec3 sumR(0), sumM(0);  //mie and rayleigh contribution 
+    glm::vec3 sumR(0), sumM(0);  // mie and rayleigh contribution 
     float opticalDepthR = 0, opticalDepthM = 0;
-    float mu = dot(ray.GetDirection(), sunDirection);  //mu in the paper which is the cosine of the angle between the sun direction and the ray direction 
+    float mu = dot(ray.GetDirection(), sunDirection);  // mu in the paper which is the cosine of the angle between the sun direction and the ray direction 
     float phaseR = 3.f / (16.f * glm::pi<float>() * (1 + mu * mu));
     float g = 0.76f;
     float phaseM = 3.f / (8.f * glm::pi<float>()) * ((1.f - g * g) * (1.f + mu * mu)) / ((2.f + g * g) * pow(1.f + g * g - 2.f * g * mu, 1.5f));
@@ -81,5 +81,5 @@ glm::vec3 Atmosphere::computeIncidentLight(Ray ray, float tmin, float tmax)
  
     // We use a magic number here for the intensity of the sun (20). We will make it more
     // scientific in a future revision of this lesson/code
-    return (sumR * betaR * phaseR + sumM * betaM * phaseM) * 20.0f; 
+    return (sumR * betaR * phaseR + sumM * betaM * phaseM) * 20000.0f; 
 }
