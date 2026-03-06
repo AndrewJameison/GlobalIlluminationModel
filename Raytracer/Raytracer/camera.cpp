@@ -87,8 +87,8 @@ void Camera::Render(World world)
                 sample += world.Spawn(Ray(position, target_pixel));
             }
 
-            glm::vec3 target_pixel = p1 + float(u) * dx + float(v) * dy;
-            sample += world.Spawn(Ray(position, target_pixel));
+            //glm::vec3 target_pixel = p1 + float(u) * dx + float(v) * dy;
+            //sample += world.Spawn(Ray(position, target_pixel));
 
             float toneSample = glm::max(glm::max(sample.x, sample.y), sample.z);
 

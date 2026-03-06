@@ -2,7 +2,7 @@
 #include "sphere.hpp"
 #include "triangle.hpp"
 
-World::World(Illumination* lightModel, Atmosphere atmo)
+World::World(Illumination* lightModel, Atmosphere* atmo)
 {
     model = lightModel;
     atmosphere = atmo;
@@ -93,10 +93,11 @@ glm::vec3 World::Spawn(Ray ray)
         // is then bounded to the range [0:INF]. In the method computeIncidentLight() we then
         // compute where this primary ray intersects the atmosphere, and we limit the max t range 
         // of the ray to the point where it leaves the atmosphere.
-        float w = atmosphere.IntersectPlanet(ray).GetDistance();
+        float w = atmosphere->IntersectPlanet(ray).GetDistance();
 
         // The *viewing or camera ray* is bounded to the range [0:w]
-        return atmosphere.computeIncidentLight(ray, 0, w);
+        return atmosphere->computeIncidentLight(ray, 0.0f, w);
+        //return glm::vec3(0.0f);
     }
 
 }

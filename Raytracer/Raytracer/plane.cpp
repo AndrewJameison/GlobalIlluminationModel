@@ -43,8 +43,12 @@ Plane::Plane(glm::vec3 n, glm::mat4 t, Material* mat)
 
 glm::vec2 Plane::Projector(glm::vec3 intersection)
 {
-    float u = (intersection.z + 1) / 2.0f;
-    float v = (intersection.x + 1) / 2.0f;
+    glm::vec4 i = LocalT * glm::vec4(intersection, 1.0f);
+
+    glm::vec3 local = glm::vec3(i / i.w);
+
+    float u = (local.z + 1) / 2.0f;
+    float v = (local.x + 1) / 2.0f;
 
     return glm::vec2(u, v);
 }

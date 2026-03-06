@@ -12,12 +12,12 @@ public:
 	void Add(Object* obj);
 	void Add(Light light);
 	glm::vec3 Spawn(Ray ray);
-	World(Illumination* lightModel, Atmosphere atmo);
+	World(Illumination* lightModel, Atmosphere* atmo);
 	~World();
 
 private:
 	Illumination* model;
-	Atmosphere atmosphere;
+	Atmosphere* atmosphere;
 	std::vector<Light> lights;
 	std::vector<Object*> objects;
 };
