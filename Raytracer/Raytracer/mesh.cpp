@@ -28,6 +28,11 @@ bool Mesh::LoadMesh(const std::string& Filename)
 	Assimp::Importer Importer;
 
 	bool success = false;
+
+	// TODO: the ordering of vertices and coordinate system is probably an issue. use these flags if necessary:
+	//  #aiProcess_FlipWindingOrder for clock-wise rotation
+	//	#aiProcess_MakeLeftHanded for LHS system (might just need this one, but who knows)
+
 	const aiScene* pScene = Importer.ReadFile(Filename.c_str(), ASSIMP_LOAD_FLAGS);
 
 	if (pScene)

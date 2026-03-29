@@ -12,7 +12,7 @@
 // This program uses SFML 2.6 for displaying the image to the screen
 // This program uses LHS order to handle vector and matrix math
     // pos. rotation is clockwise, and pos-z goes into the screen
-    // Row major order for matrices pre multiply matrices M = OLD * NEW 
+    // Row major order for matrices pre multiply matrices M = OLD * NEW
 
 // ----------------------- Objects -----------------------
 // Sphere 1

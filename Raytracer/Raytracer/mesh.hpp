@@ -21,6 +21,9 @@
 // ... AABB or circle collision, which then looks for the triangle within itself...
 // ... with perhaps individual limbs of the mesh (if any) are further bounding boxes or colliders
 
+
+// This class uses LHS ordering and clockwise pos. rotation
+// Matrices use row major order to build them thank GOD
 class Mesh {
 public:
 	Mesh() {};
