@@ -57,6 +57,9 @@
     <ClCompile Include="atmosphere.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="m_brick.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera.hpp">
@@ -105,6 +108,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="atmosphere.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="m_brick.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

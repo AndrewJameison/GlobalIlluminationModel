@@ -20,11 +20,11 @@ const glm::mat4 I = glm::mat4(1.0f);
 // ----------------------- Objects -----------------------
 // Sphere 1
 const float S1_RADIUS = 2.0f;
-const glm::mat4 S1_MODEL_T = glm::translate(I, glm::vec3(-5.0f, 4.0f, -1.0f));
+const glm::mat4 S1_MODEL_T = glm::translate(I, glm::vec3(-5.0f, 4.0f, -1.25f));
 
 // Sphere 2
 const float S2_RADIUS = 2.0f;
-const glm::mat4 S2_MODEL_T = glm::translate(I, glm::vec3(-2.0f, 3.0f, 1.0f));
+const glm::mat4 S2_MODEL_T = glm::translate(I, glm::vec3(-2.0f, 3.0f, 1.25f));
 
 // Platform
 const glm::vec3 v0 = glm::vec3(-10.0f, 0.0f, -20.0f);
@@ -38,8 +38,10 @@ const glm::mat4 PLANE_MODEL_T = glm::translate(I, glm::vec3(0.0f));
 
 
 // ----------------------- Material -----------------------
-Material* checkers = new CheckersMaterial(0.25f);
-Material* brick = new BrickMaterial(1.0f, 0.45f, 0.1f);
+Material* m_checkers = new CheckersMaterial(0.0f, 0.0f, 0.25f);
+Material* m_brick = new BrickMaterial(0.0f, 0.0f, 1.0f, 0.45f, 0.1f);
+Material* m_reflective = new PhongMaterial(1.0f, 0.0f, glm::vec3(0.0f));
+Material* m_transmissive = new PhongMaterial(0.0f, 1.0f);
 
 
 // ----------------------- Lighting -----------------------
@@ -77,10 +79,10 @@ int main()
 
     // Create and add objects to the world
     world.Add(new Sphere(S1_RADIUS, S1_MODEL_T));
-    world.Add(new Sphere(S2_RADIUS, S2_MODEL_T));
+    world.Add(new Sphere(S2_RADIUS, S2_MODEL_T, m_reflective));
 
-    world.Add(new Triangle(v2, v1, v0));
-    world.Add(new Triangle(v0, v3, v2));
+    world.Add(new Triangle(v2, v1, v0, m_checkers));
+    world.Add(new Triangle(v0, v3, v2, m_checkers));
 	//world.Add(new Plane(PLANE_NORMAL, PLANE_MODEL_T, checkers));
     
     // Setup Camera

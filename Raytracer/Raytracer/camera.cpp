@@ -84,7 +84,7 @@ void Camera::Render(World world)
                 glm::vec3 target_pixel = p1 + float(u) * dx + float(v) * dy;
 				target_pixel.x += sampleOff[i].x * pxWidth;
 				target_pixel.y += sampleOff[i].y * pxHeight;
-                sample += world.Spawn(Ray(position, target_pixel));
+                sample += world.Spawn(0, Ray(position, target_pixel));
             }
 
             //glm::vec3 target_pixel = p1 + float(u) * dx + float(v) * dy;

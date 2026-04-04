@@ -14,8 +14,8 @@ glm::vec3 BrickMaterial::GetDiffuse(glm::vec2 uv)
         uu += 0.5f;
     }
 
-    int uBrick = glm::floor(uu);
-    int vBrick = glm::floor(vv);
+    int uBrick = (int)glm::floor(uu);
+    int vBrick = (int)glm::floor(vv);
 
     uu -= uBrick;
     vv -= vBrick;
@@ -30,8 +30,11 @@ glm::vec3 BrickMaterial::GetDiffuse(glm::vec2 uv)
     }
 }
 
-BrickMaterial::BrickMaterial(float w, float h, float t, glm::vec3 b, glm::vec3 g, glm::vec3 s)
+BrickMaterial::BrickMaterial(float kr, float kt, float w, float h, float t, glm::vec3 b, glm::vec3 g, glm::vec3 s)
 {
+    reflectance = kr;
+    transmission = kt;
+
     brick_width = w;
     brick_height = h;
     grout_thickness = t;

@@ -22,6 +22,32 @@ World::~World()
     objects.clear();
 }
 
+glm::vec3 World::PerfectReflection(int depth, float kr, Ray ray, Point intersection)
+{
+    //glm::vec3 reflection = glm::normalize(glm::reflect(ray.GetDirection(), intersection.GetNormal()));
+    glm::vec3 N = intersection.GetNormal();
+    glm::vec3 I = ray.GetDirection();
+
+    glm::vec3 reflection = I - 2.0f * (glm::dot(I, N)) * N;
+    glm::vec3 pos = intersection.GetPosition();
+
+    return kr * Spawn(depth, Ray(pos, pos + reflection));
+}
+
+glm::vec3 World::MonteCarloReflection(int depth, int samples, float kr, Point intersection)
+{
+    //TODO: get rid of ambient value, its screwing with the color situation
+
+    glm::vec3 retcolor = glm::vec3();
+
+    for (int i = 0; i < samples; i++)
+    {
+        retcolor += Spawn(depth, model->ReflectionEquation(intersection));
+    }
+
+    return kr * retcolor / (float)samples;
+}
+
 void World::Add(Object* obj)
 {
     objects.push_back(obj);
@@ -32,7 +58,7 @@ void World::Add(Light light)
     lights.push_back(light);
 }
 
-glm::vec3 World::Spawn(Ray ray)
+glm::vec3 World::Spawn(int depth, Ray ray)
 {
     Point intersection = Point();
     Object* object = nullptr;
@@ -80,8 +106,32 @@ glm::vec3 World::Spawn(Ray ray)
                 intersection.AddLight(light, shadowRay.GetDirection());
             }
         }
+
+        glm::vec3 retcolor = model->Illuminate(intersection, object);
+
+        // Recursively look for transmittance and reflection
+        if (depth < MAX_DEPTH)
+        {
+            float kr = object->GetMaterial()->GetReflection();
+            float kt = object->GetMaterial()->GetTransmission();
+
+            if (kr > 0.0f)
+            {
+                //retcolor += MonteCarloReflection(depth + 1, 15, kr, intersection);
+                retcolor += PerfectReflection(depth + 1, kr, ray, intersection);
+            }
+
+            // TODO: add transmission assn 6
+            if (kt > 0.0f)
+            {
+                // Do a flip!
+
+                // TODO: spawn transmission ray; 
+                // TODO: retcolor += kt * Spawn(depth + 1, transmission ray)
+            }
+        }
         
-        return model->Illuminate(intersection, object);
+        return retcolor;
     }
 
     // We use atmospheric lighting
@@ -96,8 +146,8 @@ glm::vec3 World::Spawn(Ray ray)
         float w = atmosphere->IntersectPlanet(ray).GetDistance();
 
         // The *viewing or camera ray* is bounded to the range [0:w]
-        return atmosphere->computeIncidentLight(ray, 0.0f, w);
-        //return glm::vec3(0.0f);
+        //return atmosphere->computeIncidentLight(ray, 0.0f, w);
+        return BACKGROUND_COLOR;
     }
 
 }

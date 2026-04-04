@@ -9,7 +9,7 @@ public:
 	glm::vec3 GetDiffuse(glm::vec2 uv) override;
 	glm::vec3 GetSpecular() override { return specular; }
 
-	CheckersMaterial(float w = 1.0f,
+	CheckersMaterial(float kr, float kt, float w = 1.0f,
 					glm::vec3 b1 = glm::vec3(100.0f, 100.0f, 0.0f), 
 					glm::vec3 b2 = glm::vec3(100.0f, 0.0f, 0.0f), 
 					glm::vec3 s = glm::vec3(100.0f));

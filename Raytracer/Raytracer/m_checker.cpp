@@ -23,8 +23,10 @@ glm::vec3 CheckersMaterial::GetDiffuse(glm::vec2 uv)
     }
 }
 
-CheckersMaterial::CheckersMaterial(float w, glm::vec3 b1, glm::vec3 b2, glm::vec3 s)
+CheckersMaterial::CheckersMaterial(float kr, float kt, float w, glm::vec3 b1, glm::vec3 b2, glm::vec3 s)
 {
+    reflectance = kr;
+    transmission = kt;
     checker_width = w;
     brick_color_1 = b1;
     brick_color_2 = b2;

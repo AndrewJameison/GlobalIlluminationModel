@@ -19,11 +19,11 @@ Point::Point()
 /// <param name="w">The distance to the point of intersection from the origin</param>
 /// <param name="p">The position of the intersection</param>
 /// <param name="n">The normal of the object at the point of intersection</param>
-/// <param name="obj">The object that has been intersected by the light ray</param>
+/// <param name="i">The incoming </param>
 Point::Point(float w, glm::vec3 p, glm::vec3 n, glm::vec3 i)
 {
 	distance = w;
 	position = p;
-	normal = n;
-	incoming = i;
+	normal = glm::normalize(n);
+	incoming = glm::normalize(i);
 }
