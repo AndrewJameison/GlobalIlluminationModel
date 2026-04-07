@@ -58,6 +58,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="m_brick.cpp">
+    <ClCompile Include="mesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -111,6 +112,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="m_brick.hpp">
+    <ClInclude Include="mesh.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

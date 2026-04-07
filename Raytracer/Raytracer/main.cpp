@@ -1,6 +1,7 @@
 #include <iostream>
 #include <stdio.h>
 #include "camera.hpp"
+#include "mesh.hpp"
 #include "sphere.hpp"
 #include "triangle.hpp"
 #include "plane.hpp"
@@ -13,7 +14,7 @@
 // This program uses SFML 2.6 for displaying the image to the screen
 // This program uses LHS order to handle vector and matrix math
     // pos. rotation is clockwise, and pos-z goes into the screen
-    // Row major order for matrices pre multiply matrices M = OLD * NEW 
+    // Row major order for matrices pre multiply matrices M = OLD * NEW
 
 const glm::mat4 I = glm::mat4(1.0f);
 
@@ -44,6 +45,8 @@ Material* m_reflective = new PhongMaterial(1.0f, 0.0f, glm::vec3(0.0f));
 Material* m_transmissive = new PhongMaterial(0.0f, 1.0f);
 
 
+// ----------------------- Meshes -----------------------
+
 // ----------------------- Lighting -----------------------
 // The Sun
 const float SUN_IRRADIANCE = 200000.0f;
@@ -69,10 +72,18 @@ const glm::vec3 WORLD_UP = glm::vec3(0.0f, 1.0f, 0.0f);
 
 int main()
 {
+    // TODO: read in object data using assimp
+	// TODO: measure the runtime of rendering with and without a KD tree
+    // TODO: replace the objects list in world.cpp with a KD tree, adding should add to this tree
+    // TODO: render in world.cpp should navigate the KD tree for each ray. Use TA-B traversal for coordinate checking
+
+    // EXTRA: SAH partitioning, instead of simply splitting subdivisions in half
+
     // NOTE: Any objects have to be created using pointers because of the abstract base Object class
 	PhongBlinn* lightModel = new PhongBlinn();
     Atmosphere* atmosphere = new Atmosphere(SUN_IRRADIANCE, SUN_ROTATION, SUN_ROT_AXIS);
     World world = World(lightModel, atmosphere);
+    //Mesh* pMesh = new Mesh();
 
     world.Add(Light(L1_LIGHT_POS, L1_IRRADIANCE));
     world.Add(Light(L2_LIGHT_POS, L2_IRRADIANCE));
@@ -84,6 +95,8 @@ int main()
     world.Add(new Triangle(v2, v1, v0, m_checkers));
     world.Add(new Triangle(v0, v3, v2, m_checkers));
 	//world.Add(new Plane(PLANE_NORMAL, PLANE_MODEL_T, checkers));
+
+    //pMesh->Render(world);
     
     // Setup Camera
     Camera camera = Camera(FOCAL_LENGTH, FOV, CAM_ORIGIN);
