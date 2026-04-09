@@ -89,8 +89,8 @@ int main()
     world.Add(Light(L2_LIGHT_POS, L2_IRRADIANCE));
 
     // Create and add objects to the world
-    world.Add(new Sphere(S1_RADIUS, S1_MODEL_T));
-    world.Add(new Sphere(S2_RADIUS, S2_MODEL_T, m_reflective));
+    world.Add(new Sphere(S1_RADIUS, S1_MODEL_T, m_reflective));
+    //world.Add(new Sphere(S2_RADIUS, S2_MODEL_T, m_reflective));
 
     world.Add(new Triangle(v2, v1, v0, m_checkers));
     world.Add(new Triangle(v0, v3, v2, m_checkers));

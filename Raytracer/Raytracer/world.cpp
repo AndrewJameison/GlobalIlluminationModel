@@ -24,12 +24,13 @@ World::~World()
 
 glm::vec3 World::PerfectReflection(int depth, float kr, Ray ray, Point intersection)
 {
-    //glm::vec3 reflection = glm::normalize(glm::reflect(ray.GetDirection(), intersection.GetNormal()));
     glm::vec3 N = intersection.GetNormal();
     glm::vec3 I = ray.GetDirection();
 
     glm::vec3 reflection = I - 2.0f * (glm::dot(I, N)) * N;
-    glm::vec3 pos = intersection.GetPosition();
+
+    // Offset the origin of the reflection by just a little bit to prevent intersection with self
+    glm::vec3 pos = intersection.GetPosition() + reflection * 0.01f;
 
     return kr * Spawn(depth, Ray(pos, pos + reflection));
 }
@@ -117,7 +118,7 @@ glm::vec3 World::Spawn(int depth, Ray ray)
 
             if (kr > 0.0f)
             {
-                //retcolor += MonteCarloReflection(depth + 1, 15, kr, intersection);
+                // Create a small offset to prevent intersection the object itself
                 retcolor += PerfectReflection(depth + 1, kr, ray, intersection);
             }
 
