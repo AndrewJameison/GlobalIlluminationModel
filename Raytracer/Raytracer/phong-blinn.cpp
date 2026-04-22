@@ -41,28 +41,3 @@ glm::vec3 PhongBlinn::Illuminate(Point point, Object* obj)
 
     return ka * Ambient + kd * Diffuse + ks * Specular;
 }
-
-Ray PhongBlinn::ReflectionEquation(Point point)
-{
-    float u = (float)(rand() % 101) / 100.0f;
-    float u1 = (float)(rand() % 101) / 100.0f;
-    float u2 = (float)(rand() % 101) / 100.0f;
-    float m, n = 2 * glm::pi<float>() * u2;
-
-    // Choose a diffuse sample and compute its contribution
-    if (u < kd)
-    {
-        m = glm::acos(glm::sqrt(u1));
-    }
-
-    // Take a specular sample and compute its contribution
-    else if (u < kd + ks)
-    {
-        m = glm::acos(glm::pow(u1, 1/(ke + 1)));
-    }
-
-    glm::vec3 origin = point.GetPosition();
-    glm::vec3 direction = glm::normalize(glm::euclidean(glm::vec2(m, n)));
-
-    return Ray(origin, origin + direction);
-}

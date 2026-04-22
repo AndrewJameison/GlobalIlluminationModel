@@ -22,7 +22,7 @@ World::~World()
     objects.clear();
 }
 
-glm::vec3 World::PerfectReflection(int depth, float kr, Ray ray, Point intersection)
+Ray World::Reflection(Ray ray, Point intersection)
 {
     glm::vec3 N = intersection.GetNormal();
     glm::vec3 I = ray.GetDirection();
@@ -32,21 +32,53 @@ glm::vec3 World::PerfectReflection(int depth, float kr, Ray ray, Point intersect
     // Offset the origin of the reflection by just a little bit to prevent intersection with self
     glm::vec3 pos = intersection.GetPosition() + reflection * 0.01f;
 
-    return kr * Spawn(depth, Ray(pos, pos + reflection));
+    return Ray(pos, pos + reflection);
 }
 
-glm::vec3 World::MonteCarloReflection(int depth, int samples, float kr, Point intersection)
+Ray World::Transmission(float nt, Ray ray, Point intersection)
 {
-    //TODO: get rid of ambient value, its screwing with the color situation
+    // QUESTION: Does D refer to the direction vector of the incoming ray?    
+    glm::vec3 N = intersection.GetNormal();
+    glm::vec3 I = ray.GetDirection();
+    glm::vec3 transmissive = I;
+    float ni = AIR_INDEX_REFRACTION;
 
-    glm::vec3 retcolor = glm::vec3();
-
-    for (int i = 0; i < samples; i++)
+    // Quickly check to see if the indices of refraction are the same, no need to bend light if so
+    if (ni != nt)
     {
-        retcolor += Spawn(depth, model->ReflectionEquation(intersection));
-    }
+        // Determine whether we are inside or outside of the object
+        if (glm::dot(N, I) >= 0.0f)
+        {
+            N *= -1.0f;
+        
+            // Swap the refractive indices of the materials if we are inside
+            float t = ni;
+            ni = nt;
+            nt = t;
+        }
 
-    return kr * retcolor / (float)samples;
+        // calculate the direction of the reflective ray
+        float nRatio = ni / nt;
+        float cos = glm::dot(-I, N);
+        float sin2 = glm::pow(nRatio, 2.0f) * (1.0f - glm::pow(cos, 2.0f));
+
+        // Check for total internal reflection
+        // QUESTION: why do we compare sin2 to this value? What is the practical significance?
+        if (sin2 > 1.0f)
+        {
+            transmissive = I - 2 * dot(I, N) * N;
+        }
+        else
+        {
+            transmissive = nRatio * I + (nRatio * cos - glm::sqrt(1 - sin2)) * N;
+        }
+    }
+        
+    // Deal with proper shadow rays (EXTRA)
+
+    // Offset the origin of the transmission by just a little bit to prevent intersection with self
+    glm::vec3 pos = intersection.GetPosition() + transmissive * 0.01f;
+    return Ray(pos, pos + transmissive);
 }
 
 void World::Add(Object* obj)
@@ -79,9 +111,11 @@ glm::vec3 World::Spawn(int depth, Ray ray)
     // Return the resulting color value of the ray's journey
     if (object)
     {
+        float transmissionValue = 1.0f;
+
+        // Cast out the shadow rays
         for (const Light& light : lights)
         {
-            // Cast a shadow ray to the light source
             bool isClear = true;
 
             // Create a small offset to prevent intersection the object itself
@@ -96,8 +130,19 @@ glm::vec3 World::Spawn(int depth, Ray ray)
                 // If we ever intersect with an object, move on to the next light
                 if (point.GetDistance() != INFINITY)
                 {
-                    isClear = false;
-                    break;
+                    float kt = obj->GetMaterial()->GetTransmission();
+
+                    // Pseudo solve for shadow rays hitting transparent objects
+                    if (kt > 0.0f)
+                    {
+                        transmissionValue *= kt;
+                    }
+
+                    else 
+                    {
+                        isClear = false;
+                        break;
+                    }
                 }
             }
 
@@ -108,9 +153,11 @@ glm::vec3 World::Spawn(int depth, Ray ray)
             }
         }
 
-        glm::vec3 retcolor = model->Illuminate(intersection, object);
+        // Local Illumination
+        glm::vec3 retcolor = transmissionValue * model->Illuminate(intersection, object);
 
         // Recursively look for transmittance and reflection
+        // TODO: The mix between reflectance and transmission looks pretty noticable, blend it somehow?
         if (depth < MAX_DEPTH)
         {
             float kr = object->GetMaterial()->GetReflection();
@@ -118,17 +165,12 @@ glm::vec3 World::Spawn(int depth, Ray ray)
 
             if (kr > 0.0f)
             {
-                // Create a small offset to prevent intersection the object itself
-                retcolor += PerfectReflection(depth + 1, kr, ray, intersection);
+                retcolor += kr * Spawn(depth + 1, Reflection(ray, intersection));
             }
 
-            // TODO: add transmission assn 6
             if (kt > 0.0f)
-            {
-                // Do a flip!
-
-                // TODO: spawn transmission ray; 
-                // TODO: retcolor += kt * Spawn(depth + 1, transmission ray)
+            {                
+                retcolor += kt * Spawn(depth + 1, Transmission(kt, ray, intersection));
             }
         }
         

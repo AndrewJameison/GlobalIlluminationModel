@@ -19,11 +19,14 @@ private:
 	/// <summary>
 	/// The recursive depth constant 
 	/// </summary>
-	const int MAX_DEPTH = 1;
+	const int MAX_DEPTH = 5;
+
+	const float AIR_INDEX_REFRACTION = 1.0f;
+	
 	const glm::vec3 BACKGROUND_COLOR = glm::vec3(53.7f, 81.2f, 94.1f) * 150.f;
 
-	glm::vec3 PerfectReflection(int depth, float kr, Ray ray, Point intersection);
-	glm::vec3 MonteCarloReflection(int depth, int samples, float kr, Point intersection);
+	Ray Reflection(Ray ray, Point intersection);
+	Ray Transmission(float kt, Ray ray, Point intersection);
 
 	Illumination* model;
 	Atmosphere* atmosphere;

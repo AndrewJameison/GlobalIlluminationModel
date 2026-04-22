@@ -4,7 +4,6 @@
 class PhongBlinn : public Illumination {
 public:
 	glm::vec3 Illuminate(Point point, Object* obj) override;
-	Ray ReflectionEquation(Point point) override;
 	PhongBlinn(float a = 0.2f, float d = 0.50f, float s = 0.30f, int e = 10) : ka(a), kd(d), ks(s), ke(e) {}
 
 private:

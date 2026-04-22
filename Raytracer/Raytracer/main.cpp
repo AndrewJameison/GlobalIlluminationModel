@@ -21,11 +21,11 @@ const glm::mat4 I = glm::mat4(1.0f);
 // ----------------------- Objects -----------------------
 // Sphere 1
 const float S1_RADIUS = 2.0f;
-const glm::mat4 S1_MODEL_T = glm::translate(I, glm::vec3(-5.0f, 4.0f, -1.25f));
+const glm::mat4 S1_MODEL_T = glm::translate(I, glm::vec3(-5.0f, 4.0f, -1.2f));
 
 // Sphere 2
 const float S2_RADIUS = 2.0f;
-const glm::mat4 S2_MODEL_T = glm::translate(I, glm::vec3(-2.0f, 3.0f, 1.25f));
+const glm::mat4 S2_MODEL_T = glm::translate(I, glm::vec3(-1.8f, 3.0f, 1.2f));
 
 // Platform
 const glm::vec3 v0 = glm::vec3(-10.0f, 0.0f, -20.0f);
@@ -41,8 +41,8 @@ const glm::mat4 PLANE_MODEL_T = glm::translate(I, glm::vec3(0.0f));
 // ----------------------- Material -----------------------
 Material* m_checkers = new CheckersMaterial(0.0f, 0.0f, 0.25f);
 Material* m_brick = new BrickMaterial(0.0f, 0.0f, 1.0f, 0.45f, 0.1f);
-Material* m_reflective = new PhongMaterial(1.0f, 0.0f, glm::vec3(0.0f));
-Material* m_transmissive = new PhongMaterial(0.0f, 1.0f);
+Material* m_reflective = new PhongMaterial(0.8f, 0.0f, glm::vec3(0.0f));
+Material* m_transmissive = new PhongMaterial(0.0f, 0.55f, glm::vec3(0.0f));
 
 
 // ----------------------- Meshes -----------------------
@@ -89,8 +89,8 @@ int main()
     world.Add(Light(L2_LIGHT_POS, L2_IRRADIANCE));
 
     // Create and add objects to the world
-    world.Add(new Sphere(S1_RADIUS, S1_MODEL_T, m_reflective));
-    //world.Add(new Sphere(S2_RADIUS, S2_MODEL_T, m_reflective));
+    world.Add(new Sphere(S1_RADIUS, S1_MODEL_T, m_transmissive));
+    world.Add(new Sphere(S2_RADIUS, S2_MODEL_T, m_reflective));
 
     world.Add(new Triangle(v2, v1, v0, m_checkers));
     world.Add(new Triangle(v0, v3, v2, m_checkers));
