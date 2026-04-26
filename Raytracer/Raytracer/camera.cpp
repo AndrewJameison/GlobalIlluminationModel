@@ -2,6 +2,21 @@
 #include "atmosphere.hpp"
 #include "camera.hpp"
 
+float Camera::LogAverageLuminance()
+{
+    double lum = 0;
+
+    for (uint i = 0; i < imageHeight; i++)
+    {
+        for (uint j = 0; j < imageWidth; j++)
+        {
+            lum += glm::log(EPSILON + buffer[j][i].w);
+        }
+    }
+
+    return glm::exp(lum / (double)(imageWidth * imageHeight));
+}
+
 Camera::Camera(float focalLen, float fov, glm::vec3 pos)
 {
     focalLength = focalLen;
@@ -42,11 +57,13 @@ void Camera::Render(World world)
     };
 
     if (auto _ = !texture.loadFromImage(image))
+    {
         printf("ERROR: unable to load texture from image\n");
+    }
 
     sf::Sprite sprite(texture);
 
-    float toneMax = 0.0f;
+    float illuminanceMax = 0.0f;
 
     // Size of each pixel in camera coordinates
     float pxWidth = filmPlaneWidth / float(imageWidth);
@@ -87,27 +104,36 @@ void Camera::Render(World world)
                 sample += world.Spawn(0, Ray(position, target_pixel));
             }
 
+            /// Single Sampling for testing
             //glm::vec3 target_pixel = p1 + float(u) * dx + float(v) * dy;
             //sample += world.Spawn(Ray(position, target_pixel));
 
-            float toneSample = glm::max(glm::max(sample.x, sample.y), sample.z);
+            //float toneSample = glm::max(glm::max(sample.x, sample.y), sample.z);
+            
+            // Calculate the overall illuminance of the sample at Px(x,y)
+            float luminance = glm::dot(Illuminace_CRT, sample);
 
-            if (toneSample > toneMax)
-            {
-                toneMax = toneSample;
-            }
+            illuminanceMax = glm::max(illuminanceMax, luminance);
 
-            buffer[u][v] = sample;
+            buffer[u][v] = glm::vec4(sample, luminance);
         }
     }
 
-    // Tone Reproduction
+    float lwa = LogAverageLuminance();
+    
+    // Apply the Device Model
     for (uint v = 0; v < imageHeight; v++)
     {
         for (uint u = 0; u < imageWidth; u++)
         {
-            glm::vec3 irradiance = buffer[u][v] / toneMax;
+            // Places light values between 0-illuminanceMax
+            //glm::vec3 displayValues = glm::vec3(buffer[u][v]) * WardTR(illuminanceMax, lwa);
 
+            // Places color values between 0-1. 
+            // Assumes our device model has a max ouput of illuminanceMax and a gamma of 1
+            glm::vec3 irradiance = glm::vec3(buffer[u][v]); //displayValues / illuminanceMax;
+
+            // Places color values between 0-255 for SFML
             uint r = (uint)(irradiance.x * 255.0f);
             uint g = (uint)(irradiance.y * 255.0f);
             uint b = (uint)(irradiance.z * 255.0f);
@@ -136,6 +162,19 @@ void Camera::Render(World world)
         window.draw(sprite);
         window.display();
     }
+}
+
+float Camera::WardTR(float luminanceMax, float lwa)
+{
+    float a = 1.219f + glm::pow(luminanceMax / 2.0f, 0.4f);
+    float b = 1.219f + glm::pow(lwa, 0.4f);
+
+    return glm::pow(a / b, 2.5f);
+}
+
+float Camera::ReinhardTR()
+{
+    return 0.0f;
 }
 
 void Camera::LookAt(glm::vec3 cameraPosition, glm::vec3 targetPosition, glm::vec3 upVector)

@@ -23,7 +23,7 @@ private:
 
 	const float AIR_INDEX_REFRACTION = 1.0f;
 	
-	const glm::vec3 BACKGROUND_COLOR = glm::vec3(53.7f, 81.2f, 94.1f) * 150.f;
+	const glm::vec3 BACKGROUND_COLOR = glm::vec3(53.7f, 81.2f, 94.1f);
 
 	Ray Reflection(Ray ray, Point intersection);
 	Ray Transmission(float kt, Ray ray, Point intersection);

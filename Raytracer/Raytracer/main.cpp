@@ -42,7 +42,7 @@ const glm::mat4 PLANE_MODEL_T = glm::translate(I, glm::vec3(0.0f));
 Material* m_checkers = new CheckersMaterial(0.0f, 0.0f, 0.25f);
 Material* m_brick = new BrickMaterial(0.0f, 0.0f, 1.0f, 0.45f, 0.1f);
 Material* m_reflective = new PhongMaterial(0.8f, 0.0f, glm::vec3(0.0f));
-Material* m_transmissive = new PhongMaterial(0.0f, 0.55f, glm::vec3(0.0f));
+Material* m_transmissive = new PhongMaterial(0.0f, 0.95f, glm::vec3(0.0f));
 
 
 // ----------------------- Meshes -----------------------
@@ -55,10 +55,10 @@ const glm::vec3 SUN_ROT_AXIS = glm::vec3(1.0f, 0.0f, 0.0f);
 
 // Light 1
 const glm::vec3 L1_LIGHT_POS = glm::vec3(-5.0f, 6.0f, -4.0f);
-const glm::vec3 L1_IRRADIANCE = glm::vec3(100.0f, 100.0f, 100.0f);
+const glm::vec3 L1_IRRADIANCE = glm::vec3(256.0f, 256.0f, 256.0f);
 // Light 2
 const glm::vec3 L2_LIGHT_POS = glm::vec3(-8.0f, 10.0f, -4.0f);
-const glm::vec3 L2_IRRADIANCE = glm::vec3(100.0f, 100.0f, 100.0f);
+const glm::vec3 L2_IRRADIANCE = glm::vec3(256.0f, 256.0f, 256.0f);
 
 
 // ---------------------- World Units ----------------------
@@ -72,6 +72,10 @@ const glm::vec3 WORLD_UP = glm::vec3(0.0f, 1.0f, 0.0f);
 
 int main()
 {
+    /// Reflection
+    // TODO: fix the reflection value. I think the totalReflection variable is dependent on the reflection constant, it shouldn't be
+
+    /// KD Trees
     // TODO: read in object data using assimp
 	// TODO: measure the runtime of rendering with and without a KD tree
     // TODO: replace the objects list in world.cpp with a KD tree, adding should add to this tree
