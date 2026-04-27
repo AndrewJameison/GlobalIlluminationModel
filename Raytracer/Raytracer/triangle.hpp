@@ -5,7 +5,7 @@ class Triangle : public Object {
 public:
     Point Intersect(Ray ray) override;
     Triangle(glm::vec3 i, glm::vec3 j, glm::vec3 k, 
-        Material* mat = new PhongMaterial(0.0f, 0.0f, glm::vec3(100.0f, 0.0f, 0.0f)),
+        Material* mat = new PhongMaterial(0.0f, 0.0f, glm::vec3(1.0f, 0.0f, 0.0f)),
         glm::mat4 t = glm::mat4(1.0f));
 
 private:

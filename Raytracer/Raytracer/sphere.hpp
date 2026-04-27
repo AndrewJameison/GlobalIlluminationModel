@@ -8,7 +8,7 @@ public:
 	Point Intersect(Ray ray) override;
 	glm::vec3 GetPosition() const { return origin; }
 	Sphere(float r, glm::mat4 t = glm::mat4(1.0f),
-		Material* mat = new PhongMaterial(0.0f, 0.0f, glm::vec3(0.0f, 0.0f, 100.0f)));
+		Material* mat = new PhongMaterial(0.0f, 0.0f, glm::vec3(0.0f, 0.0f, 1.0f)));
 
 private:
 	float radius;

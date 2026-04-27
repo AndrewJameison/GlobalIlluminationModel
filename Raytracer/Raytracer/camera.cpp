@@ -127,11 +127,15 @@ void Camera::Render(World world)
         for (uint u = 0; u < imageWidth; u++)
         {
             // Places light values between 0-illuminanceMax
-            //glm::vec3 displayValues = glm::vec3(buffer[u][v]) * WardTR(illuminanceMax, lwa);
+            //glm::vec3 displayValues = ReinhardTR(0.18f, lwa, illuminanceMax, glm::vec3(buffer[u][v]));
+            glm::vec3 displayValues = WardTR(lwa, illuminanceMax, glm::vec3(buffer[u][v]));
 
             // Places color values between 0-1. 
             // Assumes our device model has a max ouput of illuminanceMax and a gamma of 1
-            glm::vec3 irradiance = glm::vec3(buffer[u][v]); //displayValues / illuminanceMax;
+            glm::vec3 irradiance = displayValues / illuminanceMax;
+
+            // Prevent wrap-around color artifacts
+            irradiance = glm::clamp(irradiance, 0.0f, 1.0f);
 
             // Places color values between 0-255 for SFML
             uint r = (uint)(irradiance.x * 255.0f);
@@ -164,17 +168,23 @@ void Camera::Render(World world)
     }
 }
 
-float Camera::WardTR(float luminanceMax, float lwa)
+glm::vec3 Camera::WardTR(float adaptaionLuminance, float maxLuminanceDisplay, glm::vec3 color)
 {
-    float a = 1.219f + glm::pow(luminanceMax / 2.0f, 0.4f);
-    float b = 1.219f + glm::pow(lwa, 0.4f);
+    float a = 1.219f + glm::pow(maxLuminanceDisplay / 2.0f, 0.4f);
+    float b = 1.219f + glm::pow(adaptaionLuminance, 0.4f);
 
-    return glm::pow(a / b, 2.5f);
+    return color * glm::pow(a / b, 2.5f);
 }
 
-float Camera::ReinhardTR()
+glm::vec3 Camera::ReinhardTR(float a, float keyValue, float maxLuminanceDisplay, glm::vec3 color)
 {
-    return 0.0f;
+    // Scale the luminance
+    glm::vec3 scaledLum = color * a / keyValue;
+
+    // Reflectiance range 0-1
+    glm::vec3 reflectance = scaledLum / (glm::vec3(1.0f) + scaledLum);
+
+    return reflectance * maxLuminanceDisplay;
 }
 
 void Camera::LookAt(glm::vec3 cameraPosition, glm::vec3 targetPosition, glm::vec3 upVector)

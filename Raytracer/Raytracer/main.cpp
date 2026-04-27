@@ -28,8 +28,8 @@ const float S2_RADIUS = 2.0f;
 const glm::mat4 S2_MODEL_T = glm::translate(I, glm::vec3(-1.8f, 3.0f, 1.2f));
 
 // Platform
-const glm::vec3 v0 = glm::vec3(-10.0f, 0.0f, -20.0f);
-const glm::vec3 v1 = glm::vec3(10.0f, 0.0f, -20.0f);
+const glm::vec3 v0 = glm::vec3(-10.0f, 0.0f, -5.0f);
+const glm::vec3 v1 = glm::vec3(10.0f, 0.0f, -5.0f);
 const glm::vec3 v2 = glm::vec3(10.0f, 0.0f, 20.0f);
 const glm::vec3 v3 = glm::vec3(-10.0f, 0.0f, 20.0f);
 
@@ -55,10 +55,10 @@ const glm::vec3 SUN_ROT_AXIS = glm::vec3(1.0f, 0.0f, 0.0f);
 
 // Light 1
 const glm::vec3 L1_LIGHT_POS = glm::vec3(-5.0f, 6.0f, -4.0f);
-const glm::vec3 L1_IRRADIANCE = glm::vec3(256.0f, 256.0f, 256.0f);
+const glm::vec3 L1_IRRADIANCE = glm::vec3(1.f);
 // Light 2
 const glm::vec3 L2_LIGHT_POS = glm::vec3(-8.0f, 10.0f, -4.0f);
-const glm::vec3 L2_IRRADIANCE = glm::vec3(256.0f, 256.0f, 256.0f);
+const glm::vec3 L2_IRRADIANCE = glm::vec3(1.0f);
 
 
 // ---------------------- World Units ----------------------
@@ -90,7 +90,7 @@ int main()
     //Mesh* pMesh = new Mesh();
 
     world.Add(Light(L1_LIGHT_POS, L1_IRRADIANCE));
-    world.Add(Light(L2_LIGHT_POS, L2_IRRADIANCE));
+    //world.Add(Light(L2_LIGHT_POS, L2_IRRADIANCE));
 
     // Create and add objects to the world
     world.Add(new Sphere(S1_RADIUS, S1_MODEL_T, m_transmissive));

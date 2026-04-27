@@ -22,15 +22,16 @@ class Camera {
         /// 
         /// </summary>
         /// <param name="luminanceMax"></param>
-        /// <param name="lwa">The adaptation luminance value, we use LogAverageLuminance here</param>
-        /// <returns>The target display illuminance</returns>
-        float WardTR(float luminanceMax, float lwa);
+        /// <param name="adaptaionLuminance"></param>
+        /// <param name="color"></param>
+        /// <returns></returns>
+        glm::vec3 WardTR(float luminanceMax, float adaptaionLuminance, glm::vec3 color);
 
         /// <summary>
         /// A tone reproduction model by Reinhard
         /// </summary>
         /// <returns>The target display illuminance</returns>
-        float ReinhardTR();
+        glm::vec3 ReinhardTR(float a, float keyValue, float maxLuminanceDisplay, glm::vec3 color);
 
         /// <summary>
         /// 
