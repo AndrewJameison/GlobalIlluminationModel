@@ -55,10 +55,10 @@ const glm::vec3 SUN_ROT_AXIS = glm::vec3(1.0f, 0.0f, 0.0f);
 
 // Light 1
 const glm::vec3 L1_LIGHT_POS = glm::vec3(-5.0f, 6.0f, -4.0f);
-const glm::vec3 L1_IRRADIANCE = glm::vec3(1.f);
+const glm::vec3 L1_IRRADIANCE = glm::vec3(.75f);
 // Light 2
 const glm::vec3 L2_LIGHT_POS = glm::vec3(-8.0f, 10.0f, -4.0f);
-const glm::vec3 L2_IRRADIANCE = glm::vec3(1.0f);
+const glm::vec3 L2_IRRADIANCE = glm::vec3(0.75f);
 
 
 // ---------------------- World Units ----------------------

@@ -96,13 +96,17 @@ void Camera::Render(World world)
 
             // Post supersampling of the pixel space using a pseudo rotated grid pattern
             // TODO: replace with a vector of samples based on a samples parameter
-            for (uint i = 0; i < 4; i++)
+            int numSamples = 4;
+
+            for (uint i = 0; i < numSamples; i++)
             {
                 glm::vec3 target_pixel = p1 + float(u) * dx + float(v) * dy;
 				target_pixel.x += sampleOff[i].x * pxWidth;
 				target_pixel.y += sampleOff[i].y * pxHeight;
                 sample += world.Spawn(0, Ray(position, target_pixel));
             }
+
+            sample /= numSamples;
 
             /// Single Sampling for testing
             //glm::vec3 target_pixel = p1 + float(u) * dx + float(v) * dy;
@@ -126,21 +130,24 @@ void Camera::Render(World world)
     {
         for (uint u = 0; u < imageWidth; u++)
         {
+            //float sf = WardTR(lwa, illuminanceMax);
+            float sf = ReinhardTR(0.18f, lwa, illuminanceMax, buffer[u][v].w);
+            //float sf = AdaptiveLogTR(0.85f, lwa, illuminanceMax, buffer[u][v].w);
+
             // Places light values between 0-illuminanceMax
-            //glm::vec3 displayValues = ReinhardTR(0.18f, lwa, illuminanceMax, glm::vec3(buffer[u][v]));
-            glm::vec3 displayValues = WardTR(lwa, illuminanceMax, glm::vec3(buffer[u][v]));
+            glm::vec3 lumValues = glm::vec3(buffer[u][v]) * sf;
 
             // Places color values between 0-1. 
             // Assumes our device model has a max ouput of illuminanceMax and a gamma of 1
-            glm::vec3 irradiance = displayValues / illuminanceMax;
+            glm::vec3 colorValues = lumValues / illuminanceMax;
 
             // Prevent wrap-around color artifacts
-            irradiance = glm::clamp(irradiance, 0.0f, 1.0f);
+            colorValues = glm::clamp(colorValues, 0.0f, 1.0f);
 
             // Places color values between 0-255 for SFML
-            uint r = (uint)(irradiance.x * 255.0f);
-            uint g = (uint)(irradiance.y * 255.0f);
-            uint b = (uint)(irradiance.z * 255.0f);
+            uint r = (uint)(colorValues.x * 255.0f);
+            uint g = (uint)(colorValues.y * 255.0f);
+            uint b = (uint)(colorValues.z * 255.0f);
 
             image.setPixel(sf::Vector2u(u, v), sf::Color(r, g, b));
         }
@@ -168,23 +175,38 @@ void Camera::Render(World world)
     }
 }
 
-glm::vec3 Camera::WardTR(float adaptaionLuminance, float maxLuminanceDisplay, glm::vec3 color)
+float Camera::WardTR(float adaptaionLuminance, float maxLuminanceDisplay)
 {
     float a = 1.219f + glm::pow(maxLuminanceDisplay / 2.0f, 0.4f);
     float b = 1.219f + glm::pow(adaptaionLuminance, 0.4f);
 
-    return color * glm::pow(a / b, 2.5f);
+    return glm::pow(a / b, 2.5f);
 }
 
-glm::vec3 Camera::ReinhardTR(float a, float keyValue, float maxLuminanceDisplay, glm::vec3 color)
+float Camera::ReinhardTR(float a, float adaptaionLuminance, float maxLuminanceDisplay, float worldLuminance)
 {
     // Scale the luminance
-    glm::vec3 scaledLum = color * a / keyValue;
+    float scaledLum = worldLuminance * a / adaptaionLuminance;
 
     // Reflectiance range 0-1
-    glm::vec3 reflectance = scaledLum / (glm::vec3(1.0f) + scaledLum);
+    float reflectance = scaledLum / (1.0f + scaledLum);
 
-    return reflectance * maxLuminanceDisplay;
+    return reflectance / worldLuminance;
+}
+
+float Camera::AdaptiveLogTR(float bias, float adaptaionLuminance, float maxLuminanceDisplay, float worldLuminance)
+{
+    float scaledLum = worldLuminance / adaptaionLuminance;
+    float scaledLumMax = maxLuminanceDisplay / adaptaionLuminance;
+
+    // Scales the log base to a random value between 2-10 based on pixel radiance
+    float base = 2.0f + glm::pow(scaledLum / scaledLumMax, glm::log(bias) / glm::log(0.5f)) * 8.0f;
+    float log10 = glm::log(scaledLumMax + 1.0f) / glm::log(10.0f);
+    
+    float a = (1.0f / log10);
+    float b = glm::log(scaledLum + 1.0f) / glm::log(base);
+
+    return a * b / worldLuminance;
 }
 
 void Camera::LookAt(glm::vec3 cameraPosition, glm::vec3 targetPosition, glm::vec3 upVector)
@@ -192,4 +214,4 @@ void Camera::LookAt(glm::vec3 cameraPosition, glm::vec3 targetPosition, glm::vec
     // We move from camera space to world space, so our viewMatrix goes in reverse
     viewMatrix = glm::inverse(glm::lookAtLH(cameraPosition, targetPosition, upVector));
     position = cameraPosition;
- }
+}
