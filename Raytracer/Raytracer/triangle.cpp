@@ -62,13 +62,14 @@ Triangle::Triangle(glm::vec3 i, glm::vec3 j, glm::vec3 k, Material* mat, glm::ma
 glm::vec2 Triangle::Projector(glm::vec3 intersection)
 {
     // TODO: since each vertex is never going to change it's texel value, maybe we can store that information per vertex to speed up calculations on large objects
+    // TODO: accurately project barycentric coordinates from the intersection onto triangles
     
     glm::vec4 i = LocalT * glm::vec4(intersection, 1.0f);
 
     glm::vec3 local = glm::vec3(i / i.w);
 
-    float u = (intersection.z + 1) / 2.0f;
-    float v = (intersection.x + 1) / 2.0f;
+    float u = (intersection.z);
+    float v = (intersection.x);
 
     return glm::vec2(u, v);
 }

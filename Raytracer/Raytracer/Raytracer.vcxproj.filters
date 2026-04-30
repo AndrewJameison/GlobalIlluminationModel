@@ -16,6 +16,7 @@
     <ClCompile Include="sphere.cpp" />
     <ClCompile Include="triangle.cpp" />
     <ClCompile Include="world.cpp" />
+    <ClCompile Include="m_tile.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="atmosphere.hpp" />
@@ -35,5 +36,6 @@
     <ClInclude Include="sphere.hpp" />
     <ClInclude Include="triangle.hpp" />
     <ClInclude Include="world.hpp" />
+    <ClInclude Include="m_tile.hpp" />
   </ItemGroup>
 </Project>

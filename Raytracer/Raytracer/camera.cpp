@@ -130,8 +130,8 @@ void Camera::Render(World world)
     {
         for (uint u = 0; u < imageWidth; u++)
         {
-            //float sf = WardTR(lwa, illuminanceMax);
-            float sf = ReinhardTR(0.18f, lwa, illuminanceMax, buffer[u][v].w);
+            float sf = WardTR(lwa, illuminanceMax);
+            //float sf = ReinhardTR(0.18f, lwa, illuminanceMax, buffer[u][v].w);
             //float sf = AdaptiveLogTR(0.85f, lwa, illuminanceMax, buffer[u][v].w);
 
             // Places light values between 0-illuminanceMax
