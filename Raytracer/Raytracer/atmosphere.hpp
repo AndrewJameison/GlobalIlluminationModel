@@ -11,15 +11,15 @@ class Atmosphere
 {
 public:
     ~Atmosphere();
-    Atmosphere(float irr = 200000.0f, float rot = 0.0f, glm::vec3 rot_axis = glm::vec3(1.0f, 0.0f, 0.0f),
+    Atmosphere(float irr = 200000.0f, float degrees = 0.0f, glm::vec3 rot_axis = glm::vec3(1.0f, 0.0f, 0.0f),
         float er = 6360e3f, float ar = 6420e3f, float hr = 7994.0f, float hm = 1200.0f);
 
     //float er = 6360e3f, float ar = 6420e3f, float hr = 7994.0f, float hm = 1200.0f);
 
     /// <summary>
-    /// yuh
+    /// 
     /// </summary>
-    /// <param name="ray">The ray from the camera pointing to the sky</param>
+    /// <param name="ray"></param>
     /// <param name="tmin"></param>
     /// <param name="tmax"></param>
     /// <returns></returns>
@@ -41,5 +41,5 @@ private:
 //static const glm::vec3 betaR(3.8e-6f, 13.5e-6f, 33.1e-6f);
 //static const glm::vec3 betaM(21e-6f);
 
-static const glm::vec3 betaR(3.8e-6f, 13.5e-6f, 33.1e-6f);
-static const glm::vec3 betaM(21e-6f);
+static const glm::dvec3 betaR(3.8e-6f, 13.5e-6f, 33.1e-6f);
+static const glm::dvec3 betaM(21e-6f);

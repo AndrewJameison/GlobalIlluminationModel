@@ -49,7 +49,7 @@ public:
     /// <returns>Color correction scale factor</returns>
     float AdaptiveLogTR(float bias, float adaptaionLuminance, float maxLuminanceDisplay, float worldLuminance);
 
-    float LogAverageLuminance();
+    double LogAverageLuminance();
 
     Camera(float focalLen, float fov, glm::vec3 pos);
     ~Camera();

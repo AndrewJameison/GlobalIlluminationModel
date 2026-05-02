@@ -2,19 +2,21 @@
 #include "atmosphere.hpp"
 #include "camera.hpp"
 
-float Camera::LogAverageLuminance()
+double Camera::LogAverageLuminance()
 {
-    double lum = 0;
+    float lum = 0.0f;
 
     for (uint i = 0; i < imageHeight; i++)
     {
         for (uint j = 0; j < imageWidth; j++)
         {
-            lum += glm::log(EPSILON + buffer[j][i].w);
+            float step1 = std::isnan(buffer[j][i].w) ? glm::log(EPSILON) : glm::log(EPSILON + buffer[j][i].w);
+          
+            lum += step1;
         }
     }
 
-    return glm::exp(lum / (double)(imageWidth * imageHeight));
+    return (double)glm::exp(lum / (float)(imageWidth * imageHeight));
 }
 
 Camera::Camera(float focalLen, float fov, glm::vec3 pos)
@@ -123,7 +125,7 @@ void Camera::Render(World world)
         }
     }
 
-    float lwa = LogAverageLuminance();
+    double lwa = LogAverageLuminance();
     
     // Apply the Device Model
     for (uint v = 0; v < imageHeight; v++)
@@ -153,6 +155,8 @@ void Camera::Render(World world)
         }
     }
 
+    texture.update(image);
+    
     // Keeping the window open
     while (window.isOpen())
     {
@@ -169,7 +173,6 @@ void Camera::Render(World world)
         window.clear();
 
         // NOTE: We are assuming that the image is referencing the texture directly, not by copy
-        texture.update(image);
         window.draw(sprite);
         window.display();
     }
