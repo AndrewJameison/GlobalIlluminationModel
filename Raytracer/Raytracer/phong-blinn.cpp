@@ -8,7 +8,7 @@ glm::vec3 PhongBlinn::Illuminate(Point point, Object* obj)
     glm::vec2 uv = obj->Projector(point.GetPosition());
 
     // The normal of the intersection
-    glm::vec3 N = point.GetNormal();
+    glm::vec3 N = material->PerturbNormal(uv, point.GetNormal());
 
     // Incoming ray direction (initially the camera)
     glm::vec3 V = point.GetIncoming();

@@ -17,6 +17,7 @@
     <ClCompile Include="triangle.cpp" />
     <ClCompile Include="world.cpp" />
     <ClCompile Include="m_tile.cpp" />
+    <ClCompile Include="SimplexNoise.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="atmosphere.hpp" />
@@ -37,5 +38,6 @@
     <ClInclude Include="triangle.hpp" />
     <ClInclude Include="world.hpp" />
     <ClInclude Include="m_tile.hpp" />
+    <ClInclude Include="SimplexNoise.hpp" />
   </ItemGroup>
 </Project>

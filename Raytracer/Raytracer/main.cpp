@@ -50,7 +50,7 @@ Material* m_tile = new TileMaterial(0.0f, 0.0f);
 // ----------------------- Lighting -----------------------
 // The Sun
 const float SUN_IRRADIANCE = 5.0f;
-const float SUN_ROTATION = -85.0f;
+const float SUN_ROTATION = 75.0f;
 const glm::vec3 SUN_ROT_AXIS = glm::vec3(1.0f, 0.0f, 0.0f);
 
 // Light 1
@@ -70,6 +70,54 @@ const glm::vec3 CAM_ORIGIN = glm::vec3(-5.0f, 3.5f, -5.0f);
 const glm::vec3 CAM_TARGET = glm::vec3(-5.0f, 3.5f, 6.0f);
 const glm::vec3 WORLD_UP = glm::vec3(0.0f, 1.0f, 0.0f);
 
+void saveToFile(int frames, Camera cam, World world)
+{
+    for (int i = 0; i < frames; i++)
+    {
+        world.Update();
+
+        sf::Image image = cam.Render(world);
+
+        if (!image.saveToFile("../Sunset/sunset" + std::to_string(i) + ".png")) {
+            // handle error
+        }
+    }
+}
+
+void displayToScreen(sf::Image image)
+{
+    sf::RenderWindow window(sf::VideoMode(ImageSize), "Raytracer works!");
+    sf::Texture texture;
+
+    if (auto _ = !texture.loadFromImage(image))
+    {
+        printf("ERROR: unable to load texture from image\n");
+    }
+
+    texture.update(image);
+    sf::Sprite sprite(texture);
+
+    // Keeping the window open
+    while (window.isOpen())
+    {
+        // Process events
+        while (const std::optional event = window.pollEvent())
+        {
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape))
+                window.close();
+
+            if (event->is<sf::Event::Closed>())
+                window.close();
+        }
+
+        window.clear();
+
+        // NOTE: We are assuming that the image is referencing the texture directly, not by copy
+        window.draw(sprite);
+        window.display();
+    }
+}
+
 int main()
 {
     /// Reflection
@@ -88,9 +136,10 @@ int main()
     Atmosphere* atmosphere = new Atmosphere(SUN_IRRADIANCE, SUN_ROTATION, SUN_ROT_AXIS);
     World world = World(lightModel, atmosphere);
 
-    //world.Add(Light(L1_LIGHT_POS, L1_IRRADIANCE));
-    //world.Add(Light(L2_LIGHT_POS, L2_IRRADIANCE));
+    world.Add(Light(L1_LIGHT_POS, L1_IRRADIANCE));
+    world.Add(Light(L2_LIGHT_POS, L2_IRRADIANCE));
 
+    
     // Create and add objects to the world
     world.Add(new Sphere(S1_RADIUS, S1_MODEL_T, m_transmissive));
     world.Add(new Sphere(S2_RADIUS, S2_MODEL_T, m_reflective));
@@ -99,10 +148,14 @@ int main()
     world.Add(new Triangle(v0, v3, v2, m_checkers));
 	//world.Add(new Plane(PLANE_NORMAL, PLANE_MODEL_T, checkers));
     
+    
     // Setup Camera
     Camera camera = Camera(FOCAL_LENGTH, FOV, CAM_ORIGIN);
     camera.LookAt(CAM_ORIGIN, CAM_TARGET, WORLD_UP);
-    camera.Render(world);
+
+
+    //saveToFile(180, camera, world);
+    displayToScreen(camera.Render(world));
 
     return 0;
 }

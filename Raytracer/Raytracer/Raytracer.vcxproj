@@ -32,6 +32,7 @@
     <ClCompile Include="point.cpp" />
     <ClCompile Include="ray.cpp" />
     <ClCompile Include="plane.cpp" />
+    <ClCompile Include="SimplexNoise.cpp" />
     <ClCompile Include="sphere.cpp" />
     <ClCompile Include="triangle.cpp" />
     <ClCompile Include="world.cpp" />
@@ -52,6 +53,7 @@
     <ClInclude Include="point.hpp" />
     <ClInclude Include="ray.hpp" />
     <ClInclude Include="plane.hpp" />
+    <ClInclude Include="SimplexNoise.hpp" />
     <ClInclude Include="sphere.hpp" />
     <ClInclude Include="triangle.hpp" />
     <ClInclude Include="world.hpp" />

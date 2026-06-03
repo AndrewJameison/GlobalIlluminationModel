@@ -10,9 +10,11 @@ double Camera::LogAverageLuminance()
     {
         for (uint j = 0; j < imageWidth; j++)
         {
-            float step1 = std::isnan(buffer[j][i].w) ? glm::log(EPSILON) : glm::log(EPSILON + buffer[j][i].w);
+            // Some luminance values come through as NAN because of the massive distance values involved in planet scale calculations
+            // Small sanity check to make sure the light of the sun comes through
+            float step = std::isnan(buffer[j][i].w) ? glm::log(EPSILON) : glm::log(EPSILON + buffer[j][i].w);
           
-            lum += step1;
+            lum += step;
         }
     }
 
@@ -35,16 +37,13 @@ Camera::Camera(float focalLen, float fov, glm::vec3 pos)
 
 Camera::~Camera()
 {
-    delete[] buffer;
+    //delete[] buffer;
 }
 
-void Camera::Render(World world)
+sf::Image Camera::Render(World world)
 {
     // Create our window, put an image on a texture and assign it to the sprite, that sprite is our camera view
-    sf::Vector2u imageSize = sf::Vector2u(imageWidth, imageHeight);
-    sf::RenderWindow window(sf::VideoMode(imageSize), "Raytracer works!");
-    sf::Image image(imageSize, sf::Color::White);
-    sf::Texture texture;
+    sf::Image image(ImageSize, sf::Color::White);
     
     // Pseudo rotated grid pattern values for supersampling
     // TODO: Add a supersampling option (toggle) and number of samples (rays) to apply for each pixel, then average them
@@ -57,13 +56,6 @@ void Camera::Render(World world)
         glm::vec3(-0.1f, -0.4f, 0.0f), 
         glm::vec3(-0.4f, 0.1f, 0.0f) 
     };
-
-    if (auto _ = !texture.loadFromImage(image))
-    {
-        printf("ERROR: unable to load texture from image\n");
-    }
-
-    sf::Sprite sprite(texture);
 
     float illuminanceMax = 0.0f;
 
@@ -110,7 +102,7 @@ void Camera::Render(World world)
 
             sample /= numSamples;
 
-            /// Single Sampling for testing
+            // Single Sampling for testing
             //glm::vec3 target_pixel = p1 + float(u) * dx + float(v) * dy;
             //sample += world.Spawn(Ray(position, target_pixel));
 
@@ -155,27 +147,7 @@ void Camera::Render(World world)
         }
     }
 
-    texture.update(image);
-    
-    // Keeping the window open
-    while (window.isOpen())
-    {
-        // Process events
-        while (const std::optional event = window.pollEvent())
-        {
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape))
-                window.close();
-
-            if (event->is<sf::Event::Closed>())
-                window.close();
-        }
-
-        window.clear();
-
-        // NOTE: We are assuming that the image is referencing the texture directly, not by copy
-        window.draw(sprite);
-        window.display();
-    }
+    return image;
 }
 
 float Camera::WardTR(float adaptaionLuminance, float maxLuminanceDisplay)

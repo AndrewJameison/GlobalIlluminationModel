@@ -16,6 +16,8 @@ public:
 
     //float er = 6360e3f, float ar = 6420e3f, float hr = 7994.0f, float hm = 1200.0f);
 
+    void Update(float degreesPerFrame, glm::vec3 rot_axis);
+
     /// <summary>
     /// 
     /// </summary>
@@ -23,7 +25,7 @@ public:
     /// <param name="tmin"></param>
     /// <param name="tmax"></param>
     /// <returns></returns>
-    glm::vec3 computeIncidentLight(Ray ray, float tmin, float tmax) const;
+    glm::vec3 ComputeIncidentLight(Ray ray, float tmin, float tmax) const;
 
     Point IntersectPlanet(Ray ray) { return planet->Intersect(ray); }
 private:

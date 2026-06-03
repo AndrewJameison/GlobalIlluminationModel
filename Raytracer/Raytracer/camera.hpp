@@ -6,6 +6,7 @@
 
 const uint imageWidth = 800;
 const uint imageHeight = 600;
+const sf::Vector2u ImageSize = sf::Vector2u(imageWidth, imageHeight);
 const float maxIValue = 1.0f;
 const float EPSILON = 0.000001f;
 
@@ -19,7 +20,7 @@ typedef glm::vec4 filmPlaneBuffer[imageHeight];
 class Camera {
 public:
     void LookAt(glm::vec3 cameraPosition, glm::vec3 targetPosition, glm::vec3 upVector);
-    void Render(World world);
+    sf::Image Render(World world);
 
     /// <summary>
     /// 

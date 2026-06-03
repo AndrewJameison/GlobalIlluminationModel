@@ -12,14 +12,19 @@ World::World(Illumination* lightModel, Atmosphere* atmo)
 
 World::~World()
 {
-    delete model;
+    //delete model;
 
-    for (Object* obj : objects)
-    {
-        delete obj;
-    }
+    //for (Object* obj : objects)
+    //{
+    //    delete obj;
+    //}
 
     objects.clear();
+}
+
+void World::Update()
+{
+    atmosphere->Update(10.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 }
 
 Ray World::Reflection(Ray ray, Point intersection)
@@ -189,8 +194,8 @@ glm::vec3 World::Spawn(int depth, Ray ray)
         float w = atmosphere->IntersectPlanet(ray).GetDistance();
 
         // The *viewing or camera ray* is bounded to the range [0:w]
-        //return atmosphere->computeIncidentLight(ray, 0.0f, w);
-        return BACKGROUND_COLOR;
+        return atmosphere->ComputeIncidentLight(ray, 0.0f, w);
+        //return BACKGROUND_COLOR;
     }
 
 }

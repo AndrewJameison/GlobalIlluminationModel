@@ -29,13 +29,21 @@ Atmosphere::Atmosphere(float irr, float degrees, glm::vec3 rot_axis, float er, f
     atmosphere = new Sphere(atmosphereRadius, atmosPosition);
 }
 
+void Atmosphere::Update(float degreesPerFrame, glm::vec3 rot_axis)
+{
+    glm::mat4 mRotation = glm::rotate(glm::mat4(1.0f), glm::radians(degreesPerFrame), rot_axis);
+    glm::vec4 vRotation = mRotation * glm::vec4(sunDirection, 1.0f);
+
+    sunDirection = glm::vec3(vRotation) / vRotation.w;
+}
+
 
 // Changes made from original script:
 // Camera is currently closer to the origin rather than having the atmosphere and earth at (0,0)
 // We don't have a near or far intersection (t0, t1) -> (tmin, tmax), only the closest intersection is returned. This is fine as long as we are inside the atmosphere
 // We also made atmosphere return a reference, otherwise it  was being overwritten by a triangle????
 
-glm::vec3 Atmosphere::computeIncidentLight(Ray ray, float tmin, float tmax) const
+glm::vec3 Atmosphere::ComputeIncidentLight(Ray ray, float tmin, float tmax) const
 {
     Point pt = atmosphere->Intersect(ray);
     float t1 = pt.GetDistance();
@@ -62,7 +70,7 @@ glm::vec3 Atmosphere::computeIncidentLight(Ray ray, float tmin, float tmax) cons
     float opticalDepthR = 0.0f, opticalDepthM = 0.0f;
     float mu = dot(ray.GetDirection(), sunDirection);  // mu in the paper which is the cosine of the angle between the sun direction and the ray direction 
     float phaseR = 3.f / (16.f * glm::pi<float>()) * (1.0f + mu * mu);
-    float g = -0.750f;
+    float g = 0.750f;
     float phaseM = 3.f / (8.f * glm::pi<float>()) * ((1.f - g * g) * (1.f + mu * mu)) / ((2.f + g * g) * pow(1.f + g * g - 2.f * g * mu, 1.5f));
 
     for (uint32_t i = 0; i < numSamples; ++i) {

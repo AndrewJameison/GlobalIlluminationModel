@@ -11,6 +11,9 @@ public:
 	float GetReflection() const { return reflectance; }
 	float GetTransmission() const { return transmission; }
 
+	virtual float GetHeight(glm::vec2 uv) { return 1.0f; }
+	virtual glm::vec3 PerturbNormal(glm::vec2 uv, glm::vec3 normal) { return normal; }
+
 	/// <summary>
 	/// Calculates the diffuse value of the material
 	/// </summary>
@@ -18,6 +21,7 @@ public:
 	/// <returns></returns>
 	virtual glm::vec3 GetDiffuse(glm::vec2 uv) = 0;
 	virtual glm::vec3 GetSpecular() = 0;
+
 
 protected:
 	/// <summary>
